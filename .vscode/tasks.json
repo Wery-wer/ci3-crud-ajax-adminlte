@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Open CodeIgniter 3 Project",
+			"type": "shell",
+			"command": "start",
+			"args": ["http://localhost/ci3-noreload/"],
+			"group": "build",
+			"isBackground": false
+		}
+	]
+}
