@@ -167,6 +167,19 @@
 </div>
 
 <script>
+// Pastikan jQuery sudah loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for jQuery to be loaded
+    if (typeof jQuery === 'undefined') {
+        setTimeout(function() {
+            initDashboard();
+        }, 100);
+    } else {
+        initDashboard();
+    }
+});
+
+function initDashboard() {
 $(document).ready(function() {
     // Update dashboard time
     function updateDashboardTime() {
@@ -201,5 +214,6 @@ function checkSystemStatus() {
         confirmButtonText: 'Great!',
         confirmButtonColor: '#28a745'
     });
+}
 }
 </script>

@@ -110,6 +110,19 @@
 
 <!-- Custom JavaScript -->
 <script>
+// Pastikan jQuery sudah loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for jQuery to be loaded
+    if (typeof jQuery === 'undefined') {
+        setTimeout(function() {
+            initUsersPage();
+        }, 100);
+    } else {
+        initUsersPage();
+    }
+});
+
+function initUsersPage() {
 $(document).ready(function() {
     let usersTable;
     let autoRefreshInterval;
@@ -477,4 +490,5 @@ $(document).ready(function() {
     loadUsers();
     startAutoRefresh();
 });
+}
 </script>

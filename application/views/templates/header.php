@@ -185,8 +185,8 @@
           </li>
           
           <!-- Master Data -->
-          <li class="nav-item <?= strpos(uri_string(), 'users') !== false ? 'menu-open' : '' ?>">
-            <a href="#" class="nav-link <?= strpos(uri_string(), 'users') !== false ? 'active' : '' ?>">
+          <li class="nav-item <?= strpos(uri_string(), 'users') !== false || strpos(uri_string(), 'user_registration') !== false ? 'menu-open' : '' ?>">
+            <a href="#" class="nav-link <?= strpos(uri_string(), 'users') !== false || strpos(uri_string(), 'user_registration') !== false ? 'active' : '' ?>">
               <i class="nav-icon fas fa-database"></i>
               <p>
                 Master Data
@@ -198,6 +198,14 @@
                 <a href="<?= base_url('users') ?>" class="nav-link <?= uri_string() == 'users' ? 'active' : '' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Users Management</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= base_url('user_registration') ?>" class="nav-link <?= strpos(uri_string(), 'user_registration') !== false ? 'active' : '' ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>User Registration</p>
+                </a>
+              </li>
                 </a>
               </li>
             </ul>
