@@ -34,7 +34,7 @@ ADD COLUMN profile_picture VARCHAR(255) NULL AFTER last_login;
 
 UPDATE users SET 
     username = CONCAT('user', id),
-    password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- password: admin123
+    password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
     role = 'user',
     is_active = 1;
 
