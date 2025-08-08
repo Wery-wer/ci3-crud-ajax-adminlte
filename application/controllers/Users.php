@@ -12,6 +12,10 @@ class Users extends CI_Controller {
         
         $this->load->model('User_model');
         $this->load->library('form_validation');
+        $this->load->helper(array('url', 'auth'));
+        
+        // Check if user is logged in
+        check_login();
     }
 
     public function index()

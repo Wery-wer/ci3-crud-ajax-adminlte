@@ -7,6 +7,10 @@ class Dashboard extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('User_model');
+        $this->load->helper(array('url', 'auth'));
+        
+        // Check if user is logged in
+        check_login();
     }
 
     public function index()
