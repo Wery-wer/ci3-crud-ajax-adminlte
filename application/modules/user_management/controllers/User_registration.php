@@ -104,48 +104,65 @@ class User_registration extends MX_Controller {
     }
 
     public function update_user_ajax() {
+        try {
+            $user_id = $this->input->post('user_id');
+            
+            // Debug: Log input data
+            log_message('debug', 'Update User Input: ' . json_encode($this->input->post()));
 
-        $user_id = $this->input->post('user_id');
+            $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check[' . $user_id . ']');
+            $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[4]|callback_username_check[' . $user_id . ']');
+            $this->form_validation->set_rules('role', 'Role', 'required|in_list[admin,manager,user]');
 
-        $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check[' . $user_id . ']');
-        $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[4]|callback_username_check[' . $user_id . ']');
-        $this->form_validation->set_rules('role', 'Role', 'required|in_list[admin,manager,user]');
-
-        if ($this->form_validation->run() == FALSE) {
-            $response = array(
-                'success' => false,
-                'message' => validation_errors()
-            );
-        } else {
-            // Prepare data untuk update
-            $data = array(
-                'name' => $this->input->post('name'),
-                'email' => $this->input->post('email'),
-                'username' => $this->input->post('username'),
-                'role' => $this->input->post('role'),
-                'is_active' => $this->input->post('is_active'),
-                'updated_at' => date('Y-m-d H:i:s')
-            );
-
-            // Update password jika diisi
-            $new_password = $this->input->post('password');
-            if (!empty($new_password)) {
-                $data['password'] = password_hash($new_password, PASSWORD_DEFAULT);
-            }
-
-            // Update ke database
-            if ($this->Registration_model->update_user($user_id, $data)) {
-                $response = array(
-                    'success' => true,
-                    'message' => 'User updated successfully!'
-                );
-            } else {
+            if ($this->form_validation->run() == FALSE) {
                 $response = array(
                     'success' => false,
-                    'message' => 'Failed to update user!'
+                    'message' => validation_errors()
                 );
+            } else {
+                // Prepare data untuk update
+                $data = array(
+                    'name' => $this->input->post('name'),
+                    'email' => $this->input->post('email'),
+                    'username' => $this->input->post('username'),
+                    'role' => $this->input->post('role'),
+                    'is_active' => $this->input->post('is_active'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+
+                // Update password jika diisi
+                $new_password = $this->input->post('password');
+                if (!empty($new_password)) {
+                    $data['password'] = password_hash($new_password, PASSWORD_DEFAULT);
+                }
+
+                // Debug: Log data yang akan diupdate
+                log_message('debug', 'Update User Data: ' . json_encode($data));
+
+                // Update ke database
+                if ($this->Registration_model->update_user($user_id, $data)) {
+                    $response = array(
+                        'success' => true,
+                        'message' => 'User updated successfully!'
+                    );
+                } else {
+                    // Debug: Log database error
+                    $db_error = $this->db->error();
+                    log_message('error', 'Database Update Error: ' . json_encode($db_error));
+                    
+                    $response = array(
+                        'success' => false,
+                        'message' => 'Database error: ' . ($db_error['message'] ? $db_error['message'] : 'Failed to update user!')
+                    );
+                }
             }
+        } catch (Exception $e) {
+            log_message('error', 'Update User Exception: ' . $e->getMessage());
+            $response = array(
+                'success' => false,
+                'message' => 'System error: ' . $e->getMessage()
+            );
         }
 
         header('Content-Type: application/json');

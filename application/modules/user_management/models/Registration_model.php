@@ -77,8 +77,21 @@ class Registration_model extends CI_Model {
     // Update user
     public function update_user($id, $data)
     {
+        // Debug: Log data yang akan diupdate
+        log_message('debug', 'Model update_user - ID: ' . $id . ', Data: ' . json_encode($data));
+        
         $this->db->where('id', $id);
-        return $this->db->update($this->table, $data);
+        $result = $this->db->update($this->table, $data);
+        
+        // Debug: Log hasil update dan error jika ada
+        if (!$result) {
+            $error = $this->db->error();
+            log_message('error', 'Model update_user failed - Error: ' . json_encode($error));
+        } else {
+            log_message('debug', 'Model update_user success - Affected rows: ' . $this->db->affected_rows());
+        }
+        
+        return $result;
     }
 
     // Delete user

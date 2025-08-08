@@ -75,18 +75,46 @@ $(document).ready(function() {
     $(document).ajaxError(function(event, xhr, settings, error) {
         hideLoading();
         
+        // More detailed error information
+        let errorMessage = 'Terjadi kesalahan pada sistem. Silakan coba lagi.';
+        let debugInfo = '';
+        
+        if (xhr.status === 500) {
+            errorMessage = 'Server Error (500). Periksa log server untuk detail.';
+        } else if (xhr.status === 404) {
+            errorMessage = 'URL tidak ditemukan (404). Periksa route controller.';
+        } else if (xhr.status === 0) {
+            errorMessage = 'Koneksi terputus. Periksa koneksi internet atau server.';
+        }
+        
+        if (xhr.responseText) {
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response.message) {
+                    errorMessage = response.message;
+                }
+            } catch(e) {
+                // Response bukan JSON, gunakan response text
+                if (xhr.responseText.includes('Fatal error') || xhr.responseText.includes('Parse error')) {
+                    errorMessage = 'PHP Error terdeteksi. Periksa syntax code.';
+                    debugInfo = xhr.responseText.substring(0, 200) + '...';
+                }
+            }
+        }
+        
         Swal.fire({
             title: 'Error!',
-            text: 'Terjadi kesalahan pada sistem. Silakan coba lagi.',
+            html: errorMessage + (debugInfo ? '<br><br><small>' + debugInfo + '</small>' : ''),
             icon: 'error',
             confirmButtonText: 'OK',
             confirmButtonColor: '#dc3545'
         });
         
-        console.error('AJAX Error:', {
+        console.error('AJAX Error Details:', {
             url: settings.url,
             error: error,
             status: xhr.status,
+            statusText: xhr.statusText,
             response: xhr.responseText
         });
     });

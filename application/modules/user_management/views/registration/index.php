@@ -239,6 +239,9 @@ function initUserRegistration() {
                         $('#edit_role').val(response.data.role);
                         $('#edit_status').val(response.data.is_active);
                         $('#edit_password').val('');
+                        
+                        // Remove aria-hidden before showing modal
+                        $('.wrapper').removeAttr('aria-hidden');
                         $('#editUserModal').modal('show');
                     } else {
                         Swal.fire({
