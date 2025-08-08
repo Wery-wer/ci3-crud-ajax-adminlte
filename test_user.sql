@@ -1,10 +1,7 @@
--- Quick fix: Buat user test dengan password yang pasti work
 USE crud_ajax;
 
--- Delete user test jika sudah ada
 DELETE FROM users WHERE username = 'testadmin';
 
--- Insert user test dengan password hash yang sudah tested
 INSERT INTO users (name, email, username, password, role, is_active, created_at) 
 VALUES (
     'Test Administrator',
@@ -16,7 +13,7 @@ VALUES (
     NOW()
 );
 
--- Atau gunakan password sederhana untuk test (password = "123456")
+
 INSERT INTO users (name, email, username, password, role, is_active, created_at) 
 VALUES (
     'Simple Admin',
@@ -27,9 +24,5 @@ VALUES (
     1,
     NOW()
 );
-
--- Test credentials:
--- Username: simple
--- Password: 123456
 
 SELECT id, name, username, role, is_active FROM users WHERE username IN ('testadmin', 'simple');

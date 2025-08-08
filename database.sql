@@ -1,10 +1,6 @@
--- Database: crud_ajax
--- Create users table for CodeIgniter 3 CRUD Ajax project
-
 CREATE DATABASE IF NOT EXISTS `crud_ajax` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `crud_ajax`;
 
--- Table structure for table `users`
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -17,7 +13,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Insert sample data
 INSERT INTO `users` (`name`, `email`, `status`, `created_at`) VALUES
 ('John Doe', 'john.doe@example.com', 'active', NOW()),
 ('Jane Smith', 'jane.smith@example.com', 'active', NOW()),
@@ -25,18 +20,10 @@ INSERT INTO `users` (`name`, `email`, `status`, `created_at`) VALUES
 ('Sarah Wilson', 'sarah.wilson@example.com', 'active', NOW()),
 ('David Brown', 'david.brown@example.com', 'active', NOW());
 
--- Show table structure
 DESCRIBE `users`;
 
--- Show sample data
 SELECT * FROM `users` ORDER BY `id` DESC;
 
-
--- ========================================
--- ENHANCEMENT UNTUK HMVC & AUTHENTICATION
--- ========================================
-
--- Enhanced users table untuk authentication
 ALTER TABLE users 
 ADD COLUMN username VARCHAR(50) UNIQUE AFTER id,
 ADD COLUMN password VARCHAR(255) AFTER email,
@@ -45,17 +32,14 @@ ADD COLUMN is_active TINYINT(1) DEFAULT 1 AFTER role,
 ADD COLUMN last_login DATETIME NULL AFTER is_active,
 ADD COLUMN profile_picture VARCHAR(255) NULL AFTER last_login;
 
--- Update existing users dengan username dan password
 UPDATE users SET 
     username = CONCAT('user', id),
     password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- password: admin123
     role = 'user',
     is_active = 1;
 
--- Set user pertama sebagai admin
 UPDATE users SET role = 'admin', username = 'admin' WHERE id = 1;
 
--- Create departments table
 CREATE TABLE departments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     department_code VARCHAR(10) UNIQUE NOT NULL,
@@ -68,7 +52,6 @@ CREATE TABLE departments (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create employees table  
 CREATE TABLE employees (
     id INT PRIMARY KEY AUTO_INCREMENT,
     employee_id VARCHAR(20) UNIQUE NOT NULL,
@@ -87,19 +70,16 @@ CREATE TABLE employees (
     FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
 );
 
--- Add foreign key to users table untuk link ke employees
 ALTER TABLE users 
 ADD COLUMN employee_id INT NULL,
 ADD FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE SET NULL;
 
--- Insert sample departments
 INSERT INTO departments (department_code, department_name, description, budget) VALUES
 ('IT', 'Information Technology', 'Handles all IT infrastructure and development', 500000000),
 ('HR', 'Human Resources', 'Manages employee relations and recruitment', 200000000),
 ('FIN', 'Finance', 'Financial planning and accounting', 300000000),
 ('MKT', 'Marketing', 'Marketing and promotional activities', 250000000);
 
--- Insert sample employees
 INSERT INTO employees (employee_id, full_name, email, phone, department_id, position, hire_date, salary) VALUES
 ('EMP001', 'John Developer', 'john.dev@company.com', '081234567890', 1, 'Senior Developer', '2023-01-15', 8000000),
 ('EMP002', 'Jane Manager', 'jane.mgr@company.com', '081234567891', 2, 'HR Manager', '2022-03-20', 12000000),
