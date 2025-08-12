@@ -43,55 +43,22 @@
   </div>
 </div>
 
+<!-- Main Content  -->
 <div class="row">
-  <!-- Welcome Card -->
   <div class="col-md-8">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">
-          <i class="fas fa-home mr-1"></i>
-          Welcome to CI3 CRUD System
-        </h3>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <h5>System Features:</h5>
-            <ul class="list-unstyled">
-              <li><i class="fas fa-check text-success"></i> Real-time CRUD Operations</li>
-              <li><i class="fas fa-check text-success"></i> AJAX-powered Interface</li>
-              <li><i class="fas fa-check text-success"></i> Responsive AdminLTE Design</li>
-              <li><i class="fas fa-check text-success"></i> Auto-refresh Functionality</li>
-              <li><i class="fas fa-check text-success"></i> Smart Pagination</li>
-              <li><i class="fas fa-check text-success"></i> Form Validation</li>
-            </ul>
-          </div>
-          <div class="col-md-6">    
-            <h5>Quick Actions:</h5>
-            <div class="d-grid gap-2">
-              <a href="<?= base_url('users') ?>" class="btn btn-primary">
-                <i class="fas fa-users"></i> Manage Users
-              </a>
-              <button class="btn btn-success" onclick="window.location.reload()">
-                <i class="fas fa-sync-alt"></i> Refresh Dashboard
-              </button>
-              <button class="btn btn-info" onclick="checkSystemStatus()">
-                <i class="fas fa-heartbeat"></i> System Health
-              </button>
-            </div>
-          </div>
-        </div>
+        <h1 class="card-title">
+          Hello, <?= isset($user_name) && $user_name ? htmlspecialchars($user_name) : 'Guest' ?>
+        </h1>
       </div>
     </div>
-  </div>
 
-  <!-- Recent Users -->
-  <div class="col-md-4">
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">
-          <i class="fas fa-clock mr-1"></i>
-          Recent Users
+          <i class="fas fa-info-circle mr-1"></i>
+          Kirana News
         </h3>
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -99,29 +66,65 @@
           </button>
         </div>
       </div>
-      <div class="card-body p-0">
-        <?php if(!empty($recent_users)): ?>
-          <ul class="users-list clearfix">
-            <?php foreach($recent_users as $user): ?>
-              <li class="d-flex align-items-center p-2 border-bottom">
-                <img src="https://ui-avatars.com/api/?name=<?= urlencode($user['name']) ?>&background=007bff&color=fff&size=32" 
-                     alt="User Avatar" class="img-circle mr-2" width="32" height="32">
-                <div class="users-list-info flex-grow-1">
-                  <span class="users-list-name"><?= htmlspecialchars($user['name']) ?></span>
-                  <small class="users-list-date text-muted d-block"><?= $user['created_at_jakarta'] ?></small>
-                </div>
-              </li>
-            <?php endforeach; ?>
-          </ul>
-        <?php else: ?>
-          <div class="text-center py-4">
-            <p class="text-muted">No recent users found</p>
-          </div>
-        <?php endif; ?>
-        
-        <div class="card-footer text-center">
-          <a href="<?= base_url('users') ?>" class="uppercase">View All Users</a>
+      <div class="card-body">
+        <p>Berita terbaru dan informasi penting akan ditampilkan di sini.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+          Calendar
+        </h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
         </div>
+      </div>
+      <div class="card-body">
+        <!-- Calendar Widget -->
+        <div id="bootstrap-calendar" class="calendar-widget">
+          <!-- Calendar Header -->
+          <div class="calendar-header d-flex justify-content-between align-items-center mb-3">
+            <button type="button" class="btn btn-sm btn-outline-primary" id="prevMonth">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <h5 class="mb-0" id="currentMonthYear"></h5>
+            <button type="button" class="btn btn-sm btn-outline-primary" id="nextMonth">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          
+          <!-- Calendar Days -->
+          <div class="calendar-grid">
+            <div class="row calendar-header-days">
+              <div class="col calendar-day-header">Min</div>
+              <div class="col calendar-day-header">Sen</div>
+              <div class="col calendar-day-header">Sel</div>
+              <div class="col calendar-day-header">Rab</div>
+              <div class="col calendar-day-header">Kam</div>
+              <div class="col calendar-day-header">Jum</div>
+              <div class="col calendar-day-header">Sab</div>
+            </div>
+            <div id="calendar-dates"></div>
+          </div>
+          
+          <!-- Selected Date Info -->
+          <div class="mt-3 p-3 bg-light rounded">
+            <div id="selected-date-info">
+              <small class="text-muted">Pilih tanggal pada kalender</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">
+          Hello, <?= isset($user_name) && $user_name ? htmlspecialchars($user_name) : 'Guest' ?>
+        </h1>
       </div>
     </div>
   </div>
@@ -196,6 +199,9 @@ $(document).ready(function() {
     // Update every minute
     updateDashboardTime();
     setInterval(updateDashboardTime, 60000);
+    
+    // Initialize Bootstrap Calendar
+    initBootstrapCalendar();
 });
 
 function checkSystemStatus() {
@@ -215,5 +221,226 @@ function checkSystemStatus() {
         confirmButtonColor: '#28a745'
     });
 }
+
+// Bootstrap Calendar Implementation
+function initBootstrapCalendar() {
+    let currentDate = new Date();
+    let selectedDate = null;
+    
+    const monthNames = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    
+    const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    
+    function updateCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        
+        // Update header
+        $('#currentMonthYear').text(`${monthNames[month]} ${year}`);
+        
+        // Get first day of month and number of days
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+        
+        // Clear calendar
+        $('#calendar-dates').empty();
+        
+        // Generate calendar weeks
+        const today = new Date();
+        let weekRow = null;
+        
+        for (let i = 0; i < 42; i++) {
+            if (i % 7 === 0) {
+                weekRow = $('<div class="row calendar-week"></div>');
+                $('#calendar-dates').append(weekRow);
+            }
+            
+            const cellDate = new Date(startDate);
+            cellDate.setDate(startDate.getDate() + i);
+            
+            const isCurrentMonth = cellDate.getMonth() === month;
+            const isToday = cellDate.toDateString() === today.toDateString();
+            const isSelected = selectedDate && cellDate.toDateString() === selectedDate.toDateString();
+            
+            let cellClass = 'col calendar-day';
+            if (!isCurrentMonth) cellClass += ' other-month';
+            if (isToday) cellClass += ' today';
+            if (isSelected) cellClass += ' selected';
+            
+            const cell = $(`<div class="${cellClass}" data-date="${cellDate.toISOString().split('T')[0]}">
+                            ${cellDate.getDate()}
+                           </div>`);
+            
+            weekRow.append(cell);
+        }
+    }
+    
+    function updateSelectedDateInfo(date) {
+        const dayName = dayNames[date.getDay()];
+        const day = date.getDate();
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+        
+        // Calculate week of year
+        const startOfYear = new Date(year, 0, 1);
+        const days = Math.floor((date - startOfYear) / (24 * 60 * 60 * 1000));
+        const weekOfYear = Math.ceil((days + startOfYear.getDay()) / 7);
+        
+        const info = `
+            <div class="selected-date-details">
+                <p class="mb-1"><strong>${dayName}, ${day} ${month} ${year}</strong></p>
+                <small class="text-muted">
+                    <i class="fas fa-calendar-week"></i> Minggu ke-${weekOfYear} tahun ${year}<br>
+                    <i class="fas fa-clock"></i> ${new Date().toLocaleString('id-ID')}
+                </small>
+            </div>
+        `;
+        
+        $('#selected-date-info').html(info);
+    }
+    
+    // Event handlers
+    $(document).on('click', '.calendar-day:not(.other-month)', function() {
+        $('.calendar-day').removeClass('selected');
+        $(this).addClass('selected');
+        
+        const dateStr = $(this).data('date');
+        selectedDate = new Date(dateStr);
+        updateSelectedDateInfo(selectedDate);
+    });
+    
+    $('#prevMonth').on('click', function() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+    });
+    
+    $('#nextMonth').on('click', function() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+    });
+    
+    // Initialize calendar
+    updateCalendar();
+    
+    // Set today as selected by default
+    selectedDate = new Date();
+    updateSelectedDateInfo(selectedDate);
+    
+    // Update time every second
+    setInterval(function() {
+        if (selectedDate) {
+            updateSelectedDateInfo(selectedDate);
+        }
+    }, 1000);
+}
 }
 </script>
+
+<style>
+/* Bootstrap Calendar Styles */
+.calendar-widget {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.calendar-header-days {
+    margin-bottom: 0;
+}
+
+.calendar-day-header {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 8px 4px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: #495057;
+}
+
+.calendar-week {
+    margin-bottom: 0;
+}
+
+.calendar-day {
+    border: 1px solid #dee2e6;
+    padding: 8px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-day:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.calendar-day.other-month {
+    color: #ced4da;
+    background-color: #f8f9fa;
+    cursor: default;
+}
+
+.calendar-day.other-month:hover {
+    background-color: #f8f9fa;
+    color: #ced4da;
+}
+
+.calendar-day.today {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.today:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.calendar-day.selected {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.selected:hover {
+    background-color: #1e7e34;
+    color: white;
+}
+
+.selected-date-details p {
+    font-size: 16px;
+    color: #495057;
+}
+
+.selected-date-details small {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.calendar-header h5 {
+    color: #495057;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .calendar-day {
+        padding: 6px 2px;
+        font-size: 12px;
+        min-height: 30px;
+    }
+    
+    .calendar-day-header {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+}
+</style>

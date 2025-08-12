@@ -142,7 +142,6 @@
         </div>
       </li>
 
-      <!-- Fullscreen -->
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -184,7 +183,8 @@
             </a>
           </li>
           
-          <!-- Master Data -->
+          <!-- Master Data - Only for Admin -->
+          <?php if(get_user_role() == 'admin'): ?>
           <li class="nav-item <?= strpos(uri_string(), 'users') !== false || strpos(uri_string(), 'user_registration') !== false ? 'menu-open' : '' ?>">
             <a href="#" class="nav-link <?= strpos(uri_string(), 'users') !== false || strpos(uri_string(), 'user_registration') !== false ? 'active' : '' ?>">
               <i class="nav-icon fas fa-database"></i>
@@ -206,9 +206,16 @@
                   <p>User Registration</p>
                 </a>
               </li>
-                </a>
-              </li>
             </ul>
+          </li>
+          <?php endif; ?>
+          
+          <!-- Profile Management - For All Users -->
+          <li class="nav-item <?= strpos(uri_string(), 'profile') !== false ? 'menu-open' : '' ?>">
+            <a href="<?= base_url('profile') ?>" class="nav-link <?= strpos(uri_string(), 'profile') !== false ? 'active' : '' ?>">
+              <i class="nav-icon fas fa-user-circle"></i>
+              <p>My Profile</p>
+            </a>
           </li>
           
           <!-- Settings -->

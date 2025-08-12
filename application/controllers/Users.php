@@ -16,6 +16,9 @@ class Users extends CI_Controller {
         
         // Check if user is logged in
         check_login();
+        
+        // Check if user has admin role for Users Management
+        check_role('admin');
     }
 
     public function index()

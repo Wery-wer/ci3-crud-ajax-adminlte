@@ -1,0 +1,19 @@
+{
+    "intelephense.environment.includePaths": [
+        "application/helpers/",
+        "application/libraries/",
+        "application/core/"
+    ],
+    "intelephense.files.associations": [
+        "*.php"
+    ],
+    "intelephense.completion.insertUseDeclaration": false,
+    "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": false,
+    "intelephense.diagnostics.undefinedSymbols": false,
+    "intelephense.diagnostics.undefinedFunctions": false,
+    "intelephense.diagnostics.undefinedConstants": false,
+    "intelephense.diagnostics.undefinedMethods": false,
+    "intelephense.diagnostics.undefinedProperties": false,
+    "intelephense.diagnostics.undefinedTypes": false,
+    "intelephense.format.enable": false
+}

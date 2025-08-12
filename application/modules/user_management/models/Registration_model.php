@@ -39,8 +39,9 @@ class Registration_model extends CI_Model {
             $last_login = $user['last_login'] ? 
                 date('d M Y H:i', strtotime($user['last_login'])) : 
                 'Never';
-            
-            $actions = '
+                
+            // dipindahin ke frontend
+            $actions = ' 
                 <button class="btn btn-sm btn-warning edit-btn" data-id="'.$user['id'].'">
                     <i class="fas fa-edit"></i> Edit
                 </button>
@@ -94,14 +95,12 @@ class Registration_model extends CI_Model {
         return $result;
     }
 
-    // Delete user
     public function delete_user($id)
     {
         $this->db->where('id', $id);
         return $this->db->delete($this->table);
     }
 
-    // Check email exists (untuk validation)
     public function email_exists($email, $exclude_id = null)
     {
         $this->db->where('email', $email);
@@ -112,7 +111,6 @@ class Registration_model extends CI_Model {
         return $query->num_rows() > 0;
     }
 
-    // Check username exists (untuk validation)
     public function username_exists($username, $exclude_id = null)
     {
         $this->db->where('username', $username);

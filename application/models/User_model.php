@@ -65,6 +65,15 @@ class User_model extends CI_Model {
         return $this->db->get($this->table)->num_rows() > 0;
     }
 
+    public function username_exists($username, $exclude_id = null)
+    {
+        $this->db->where('username', $username);
+        if ($exclude_id) {
+            $this->db->where('id !=', $exclude_id);
+        }
+        return $this->db->get($this->table)->num_rows() > 0;
+    }
+
     public function name_exists($name, $exclude_id = null)
     {
         $this->db->where('name', $name);

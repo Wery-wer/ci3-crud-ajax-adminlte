@@ -15,7 +15,6 @@ class User_registration extends MX_Controller {
 
     public function index(){
 
-        // data untuk view
         $data['title'] = 'User Registration';
         $data['page_title'] = 'User Registration';
         $data['breadcrumb'] = [
@@ -107,7 +106,6 @@ class User_registration extends MX_Controller {
         try {
             $user_id = $this->input->post('user_id');
             
-            // Debug: Log input data
             log_message('debug', 'Update User Input: ' . json_encode($this->input->post()));
 
             $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
@@ -121,7 +119,6 @@ class User_registration extends MX_Controller {
                     'message' => validation_errors()
                 );
             } else {
-                // Prepare data untuk update
                 $data = array(
                     'name' => $this->input->post('name'),
                     'email' => $this->input->post('email'),
@@ -131,23 +128,19 @@ class User_registration extends MX_Controller {
                     'updated_at' => date('Y-m-d H:i:s')
                 );
 
-                // Update password jika diisi
                 $new_password = $this->input->post('password');
                 if (!empty($new_password)) {
                     $data['password'] = password_hash($new_password, PASSWORD_DEFAULT);
                 }
 
-                // Debug: Log data yang akan diupdate
                 log_message('debug', 'Update User Data: ' . json_encode($data));
 
-                // Update ke database
                 if ($this->Registration_model->update_user($user_id, $data)) {
                     $response = array(
                         'success' => true,
                         'message' => 'User updated successfully!'
                     );
                 } else {
-                    // Debug: Log database error
                     $db_error = $this->db->error();
                     log_message('error', 'Database Update Error: ' . json_encode($db_error));
                     

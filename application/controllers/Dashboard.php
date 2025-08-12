@@ -19,6 +19,11 @@ class Dashboard extends CI_Controller {
         $data['total_users'] = $this->User_model->count_all();
         $data['recent_users'] = $this->User_model->get_recent_users(5);
         
+        // Get current user data
+        $data['user_name'] = $this->session->userdata('name');
+        $data['username'] = $this->session->userdata('username');
+        $data['user_role'] = $this->session->userdata('role');
+        
         // Set page data
         $data['title'] = 'Dashboard';
         $data['page_title'] = 'Dashboard';

@@ -62,12 +62,12 @@
         <a href="#">I forgot my password</a>
       </p>
       
-      <!-- Demo credentials info -->
+      <!-- Demo credentials info
       <div class="alert alert-info mt-3">
         <h6><i class="icon fas fa-info"></i> Demo Credentials:</h6>
         <strong>Admin:</strong> username: <code>admin</code>, password: <code>admin123</code><br>
         <strong>User:</strong> username: <code>user2</code>, password: <code>admin123</code>
-      </div>
+      </div> -->
     </div>
     <!-- /.card-body -->
   </div>
