@@ -17,8 +17,8 @@
                         <h3 class="profile-username text-center"><?= htmlspecialchars($user['name']) ?></h3>
 
                         <p class="text-muted text-center">
-                            <span class="badge badge-<?= $user['role'] == 'admin' ? 'danger' : ($user['role'] == 'manager' ? 'warning' : 'primary') ?>">
-                                <?= ucfirst($user['role']) ?>
+                            <span class="badge badge-<?= $user['role_name'] == 'admin' ? 'danger' : ($user['role_name'] == 'manager' ? 'warning' : 'primary') ?>">
+                                <?= ucfirst($user['role_name']) ?>
                             </span>
                         </p>
 
@@ -141,7 +141,7 @@
                     </div>
                     <div class="form-group">
                         <label>Role</label>
-                        <input type="text" class="form-control" value="<?= ucfirst($user['role']) ?>" readonly>
+                        <input type="text" class="form-control" value="<?= isset($user['role_name']) ? $user['role_name'] : '-' ?>" readonly>
                         <small class="form-text text-muted">Role cannot be changed. Contact administrator if needed.</small>
                     </div>
                 </div>

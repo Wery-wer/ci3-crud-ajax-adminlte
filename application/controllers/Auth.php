@@ -5,7 +5,7 @@ class Auth extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('User_model');
+        $this->load->model('User_management_model');
         $this->load->library('session');
         $this->load->helper(array('url', 'auth'));
     }
@@ -47,7 +47,7 @@ class Auth extends CI_Controller {
             log_message('debug', 'Login attempt - Username: ' . $username);
             
             // Cek apakah username dan password valid
-            $user = $this->User_model->get_user_by_username($username);
+            $user = $this->User_management_model->get_user_by_username($username);
             
             // Debug: Check if user found
             if ($user) {
@@ -63,7 +63,7 @@ class Auth extends CI_Controller {
             // TEMPORARY: Skip password verification for testing
             if ($user && $user->is_active == 1 && ($password == 'admin123' || password_verify($password, $user->password))) {
                 // Update last login
-                $this->User_model->update_last_login($user->id);
+                $this->User_management_model->update_last_login($user->id);
                 
                 // session nya di tampilkan
                 $session_data = array(
@@ -71,7 +71,8 @@ class Auth extends CI_Controller {
                     'username' => $user->username,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role' => $user->role,
+                    'role' => $user->role_name,
+                    'role_id' => $user->role_id,
                     'is_logged_in' => true
                 );
                 

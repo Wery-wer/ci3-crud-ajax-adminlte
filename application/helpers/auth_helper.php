@@ -13,7 +13,7 @@ if (!function_exists('check_login')) {
 if (!function_exists('check_role')) {
     function check_role($required_role) {
         $CI =& get_instance();
-        $user_role = $CI->session->userdata('role');
+        $user_role = strtolower($CI->session->userdata('role'));
         
         if (!$user_role) {
             redirect('auth/login');

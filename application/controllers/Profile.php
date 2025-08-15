@@ -10,7 +10,7 @@ class Profile extends CI_Controller {
         // Set timezone Jakarta
         date_default_timezone_set('Asia/Jakarta');
         
-        $this->load->model('User_model');
+        $this->load->model('User_management_model');
         $this->load->library('form_validation');
         $this->load->helper(array('url', 'auth'));
         
@@ -22,7 +22,7 @@ class Profile extends CI_Controller {
     {
         // Get current user data
         $user_id = $this->session->userdata('user_id');
-        $user_data = $this->User_model->get_user_by_id($user_id);
+        $user_data = $this->User_management_model->get_user_by_id($user_id);
         
         // Set page data
         $data['title'] = 'My Profile';
@@ -76,7 +76,7 @@ class Profile extends CI_Controller {
                 $data['password'] = password_hash($new_password, PASSWORD_DEFAULT);
             }
 
-            if ($this->User_model->update_user($user_id, $data)) {
+            if ($this->User_management_model->update_user($user_id, $data)) {
                 // Update session data
                 $this->session->set_userdata('name', $data['name']);
                 $this->session->set_userdata('username', $data['username']);
@@ -99,7 +99,7 @@ class Profile extends CI_Controller {
 
     // Validation methods
     public function email_check($email, $user_id){
-        if ($this->User_model->email_exists($email, $user_id)) {
+        if ($this->User_management_model->email_exists($email, $user_id)) {
             $this->form_validation->set_message('email_check', 'Email already exists');
             return FALSE;
         }
@@ -107,7 +107,7 @@ class Profile extends CI_Controller {
     }
 
     public function username_check($username, $user_id){
-        if ($this->User_model->username_exists($username, $user_id)) {
+        if ($this->User_management_model->username_exists($username, $user_id)) {
             $this->form_validation->set_message('username_check', 'Username already exists');
             return FALSE;
         }

@@ -129,7 +129,7 @@
             <small class="text-muted"><?= get_username() ?> (<?= ucfirst(get_user_role()) ?>)</small>
           </div>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a href="<?= base_url('profile') ?>" class="dropdown-item">
             <i class="fas fa-user mr-2"></i> Profile
           </a>
           <a href="#" class="dropdown-item">
@@ -184,9 +184,9 @@
           </li>
           
           <!-- Master Data - Only for Admin -->
-          <?php if(get_user_role() == 'admin'): ?>
-          <li class="nav-item <?= strpos(uri_string(), 'users') !== false || strpos(uri_string(), 'user_registration') !== false ? 'menu-open' : '' ?>">
-            <a href="#" class="nav-link <?= strpos(uri_string(), 'users') !== false || strpos(uri_string(), 'user_registration') !== false ? 'active' : '' ?>">
+          <?php if(strtolower(get_user_role()) == 'admin'): ?>
+          <li class="nav-item <?= strpos(uri_string(), 'user_management') !== false || strpos(uri_string(), 'user_registration') !== false ? 'menu-open' : '' ?>">
+            <a href="#" class="nav-link <?= strpos(uri_string(), 'user_management') !== false || strpos(uri_string(), 'user_registration') !== false ? 'active' : '' ?>">
               <i class="nav-icon fas fa-database"></i>
               <p>
                 Master Data
@@ -195,7 +195,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url('users') ?>" class="nav-link <?= uri_string() == 'users' ? 'active' : '' ?>">
+                <a href="<?= base_url('user_management') ?>" class="nav-link <?= uri_string() == 'user_management' ? 'active' : '' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Users Management</p>
                 </a>

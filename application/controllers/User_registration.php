@@ -1,201 +1,116 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User_registration extends CI_Controller {
-    
     public function __construct() {
         parent::__construct();
-        $this->load->helper(array('url', 'auth'));
+        $this->load->model('User_registration_model');
+        $this->load->helper(['url', 'form']);
+        $this->load->library(['form_validation', 'session']);
         
-        // Load model dari folder models utama
-        $this->load->model('Registration_model');
-        $this->load->library('form_validation');
+        // Check if user is logged in
+        if (!$this->session->userdata('is_logged_in')) {
+            redirect('auth/login');
+        }
         
-        // Check authentication
-        check_login();
-        check_role('admin');
+        // Check if user has admin role
+        if (strtolower($this->session->userdata('role')) !== 'admin') {
+            show_error('Access denied. You need admin privileges to access this page.', 403, 'Access Denied');
+        }
     }
-    
+
     public function index() {
-        // Data untuk view
-        $data['title'] = 'User Registration';
+        $data['title'] = 'User Registration Management';
         $data['page_title'] = 'User Registration';
         $data['breadcrumb'] = [
             ['title' => 'Home', 'url' => base_url()],
-            ['title' => 'Master Data', 'url' => '#'],
+            ['title' => 'Master Data'],
             ['title' => 'User Registration']
         ];
         
         $this->load->view('templates/header', $data);
-        $this->load->view('../modules/user_management/views/registration/index', $data);
+        $this->load->view('user_registration/index');
         $this->load->view('templates/footer');
     }
-    
+
+    public function get_roles_ajax() {
+        $roles = $this->User_registration_model->get_all_roles();
+        echo json_encode(['status' => true, 'data' => $roles]);
+    }
+
+    // public function test_role()
+    // {
+    //     $roles = $this->User_registration_model->get_all_roles();
+    //     echo '<pre>';
+    //     print_r($roles);
+    //     echo '</pre>';
+    // }
+
+    public function get_departments_ajax() {
+        $departments = $this->User_registration_model->get_all_departments();
+        echo json_encode(['status' => true, 'data' => $departments]);
+    }
+
     public function get_users_ajax() {
-        $users = $this->Registration_model->get_all_users_for_registration();
-
-        $response = array(
-            'draw' => intval($this->input->post('draw')),
-            'recordsTotal' => count($users), 
-            'recordsFiltered' => count($users),
-            'data' => $users
-        );
-
-        header('Content-Type: application/json');
-        echo json_encode($response);
+        $users = $this->User_registration_model->get_all_users_for_registration();
+        echo json_encode(['data' => $users]);
     }
-    
-    public function create_user_ajax() {
-        $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_check_email_unique');
-        $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[4]');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
-        $this->form_validation->set_rules('role', 'Role', 'required|in_list[admin,manager,user]');
 
+    public function add_user() {
+        $this->form_validation->set_rules('name', 'Full Name', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
+        $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->form_validation->set_rules('role_id', 'Role', 'required');
         if ($this->form_validation->run() == FALSE) {
-            $response = array (
-                'success' => false,
-                'message' => validation_errors()
-            );
+            echo json_encode(['status' => false, 'message' => validation_errors()]);
         } else {
-            $data = array (
-                'name' => $this->input->post('name'),
-                'email' => $this->input->post('email'),
-                'username' => $this->input->post('username'),
-                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
-                'role' => $this->input->post('role'),
-                'is_active' => 1,
-                'created_at' => date('Y-m-d H:i:s')
-            );
-
-            if($this->Registration_model->create_user($data)) {
-                $response = array (
-                    'success' => true,
-                    'message' => 'User created successfully'
-                );
-            } else {
-                $response = array (
-                    'success' => false,
-                    'message' => 'Failed to create user'
-                );
-            }
+            $result = $this->User_registration_model->create_user($this->input->post());
+            echo json_encode(['status' => $result, 'message' => $result ? 'User added successfully' : 'Failed to add user']);
         }
-
-        header('Content-Type: application/json');
-        echo json_encode($response);
     }
-    
-    public function edit_user_ajax() {
-        $user_id = $this->input->post('user_id');
-        $user = $this->Registration_model->get_user_by_id($user_id);
 
+    public function get_user_by_id() {
+        $user_id = $this->input->post('id');
+        $user = $this->User_registration_model->get_user_by_id($user_id);
         if ($user) {
-            $response = array(
-                'success' => true,
-                'data' => $user
-            );
+            echo json_encode(['status' => true, 'data' => $user]);
         } else {
-            $response = array(
-                'success' => false,
-                'message' => 'User not found'
-            );
+            echo json_encode(['status' => false, 'message' => 'User not found']);
         }
-
-        header('Content-Type: application/json');
-        echo json_encode($response);
     }
-    
-    public function update_user_ajax() {
-        $user_id = $this->input->post('user_id');
 
-        $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check[' . $user_id . ']');
-        $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[4]|callback_username_check[' . $user_id . ']');
-        $this->form_validation->set_rules('role', 'Role', 'required|in_list[admin,manager,user]');
+    // public function test_getid()
+    // {
+    //     $user = $this->User_registration_model->get_user_by_id(46);
+    //     echo '<pre>';
+    //     print_r($user);
+    //     echo '</pre>';
+    //     // echo json_encode($user);
+    //     $query = $this->db->get('users');
+    //     echo '</pre>';
+    //     // print_r($query->row_array());
+    //     // print_r($query->row());
+    //     // print_r($query->result_array());
+    //     print_r($query->result());
+    // }
 
+    public function update_user() {
+        $this->form_validation->set_rules('name', 'Full Name', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('role_id', 'Role', 'required');
+        $this->form_validation->set_rules('is_active', 'Status', 'required');
         if ($this->form_validation->run() == FALSE) {
-            $response = array(
-                'success' => false,
-                'message' => validation_errors()
-            );
+            echo json_encode(['status' => false, 'message' => validation_errors()]);
         } else {
-            $data = array(
-                'name' => $this->input->post('name'),
-                'email' => $this->input->post('email'),
-                'username' => $this->input->post('username'),
-                'role' => $this->input->post('role'),
-                'is_active' => $this->input->post('is_active'),
-                'updated_at' => date('Y-m-d H:i:s')
-            );
-
-            $new_password = $this->input->post('password');
-            if (!empty($new_password)) {
-                $data['password'] = password_hash($new_password, PASSWORD_DEFAULT);
-            }
-
-            if ($this->Registration_model->update_user($user_id, $data)) {
-                $response = array(
-                    'success' => true,
-                    'message' => 'User updated successfully!'
-                );
-            } else {
-                $response = array(
-                    'success' => false,
-                    'message' => 'Failed to update user!'
-                );
-            }
+            $result = $this->User_registration_model->update_user($this->input->post());
+            echo json_encode(['status' => $result, 'message' => $result ? 'User updated successfully' : 'Failed to update user']);
         }
-
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
-    
-    public function delete_user_ajax() {
-        $user_id = $this->input->post('user_id');
-
-        if ($user_id == $this->session->userdata('user_id')) {
-            $response = array(
-                'success' => false,
-                'message' => 'You cannot delete your own account!'
-            );
-        } else {
-            if ($this->Registration_model->delete_user($user_id)) {
-                $response = array(
-                    'success' => true,
-                    'message' => 'User deleted successfully!'
-                );
-            } else {
-                $response = array(
-                    'success' => false,
-                    'message' => 'Failed to delete user!'
-                );
-            }
-        }
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
-    
-    public function check_email_unique($email) {
-        if ($this->Registration_model->email_exists($email)) {
-            $this->form_validation->set_message('check_email_unique', 'Email already exists');
-            return FALSE;
-        }
-        return TRUE;
-    }
-    
-    public function email_check($email, $user_id) {
-        if ($this->Registration_model->email_exists($email, $user_id)) {
-            $this->form_validation->set_message('email_check', 'Email already exists');
-            return FALSE;
-        }
-        return TRUE;
     }
 
-    public function username_check($username, $user_id) {
-        if ($this->Registration_model->username_exists($username, $user_id)) {
-            $this->form_validation->set_message('username_check', 'Username already exists');
-            return FALSE;
-        }
-        return TRUE;
+    public function delete_user() {
+        $user_id = $this->input->post('id');
+        $result = $this->User_registration_model->delete_user($user_id);
+        echo json_encode(['status' => $result, 'message' => $result ? 'User deleted successfully' : 'Failed to delete user']);
     }
 }

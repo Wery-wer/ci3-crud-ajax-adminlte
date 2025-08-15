@@ -6,7 +6,7 @@ class Dashboard extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('User_model');
+        $this->load->model('User_management_model');
         $this->load->helper(array('url', 'auth'));
         
         // Check if user is logged in
@@ -16,8 +16,8 @@ class Dashboard extends CI_Controller {
     public function index()
     {
         // Get statistics for dashboard
-        $data['total_users'] = $this->User_model->count_all();
-        $data['recent_users'] = $this->User_model->get_recent_users(5);
+        $data['total_users'] = $this->User_management_model->count_all();
+        $data['recent_users'] = $this->User_management_model->get_recent_users(5);
         
         // Get current user data
         $data['user_name'] = $this->session->userdata('name');

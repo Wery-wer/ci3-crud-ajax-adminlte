@@ -1,4 +1,26 @@
 <!-- Main content -->
+<style>
+/* Pastikan DataTables responsive dan menggunakan full width */
+.dataTables_wrapper {
+    width: 100% !important;
+}
+
+#usersTable {
+    width: 100% !important;
+}
+
+.table-responsive {
+    width: 100% !important;
+    overflow-x: auto;
+}
+
+/* Force table to recalculate when sidebar changes */
+.sidebar-collapse .content-wrapper .dataTables_wrapper,
+.sidebar-open .content-wrapper .dataTables_wrapper {
+    width: 100% !important;
+}
+</style>
+
 <div class="row">
   <div class="col-12">
     <div class="card">
@@ -8,9 +30,6 @@
           Users Data Management
         </h3>
         <div class="card-tools">
-          <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#userModal" onclick="openCreateModal()">
-            <i class="fas fa-plus"></i> Add New User
-          </button>
           <button type="button" class="btn btn-success btn-sm ml-1" onclick="refreshUsersManual()">
             <i class="fas fa-sync-alt"></i> <span class="d-none d-sm-inline">Refresh</span>
           </button>
@@ -27,10 +46,10 @@
             <thead class="thead-dark">
               <tr>
                 <th style="width: 5%;">#</th>
-                <th style="width: 30%;">Name</th>
-                <th style="width: 35%;">Email</th>
-                <th style="width: 20%;">Created At</th>
-                <th style="width: 10%;">Actions</th>
+                <th style="width: 25%;">Name</th>
+                <th style="width: 30%;">Email</th>
+                <th style="width: 20%;">Department</th>
+                <th style="width: 15%;">Created At</th>
               </tr>
             </thead>
             <tbody>
@@ -43,7 +62,7 @@
       <div class="card-footer">
         <small class="text-muted">
           <i class="fas fa-info-circle"></i>
-          Data will auto-refresh every 3 seconds on page 1. Manual refresh available anytime.
+          User list with department information. Data will auto-refresh every 3 seconds on page 1.
         </small>
       </div>
     </div>
@@ -108,9 +127,7 @@
   </div>
 </div>
 
-<!-- Custom JavaScript -->
 <script>
-// Pastikan jQuery sudah loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Wait for jQuery to be loaded
     if (typeof jQuery === 'undefined') {
@@ -161,12 +178,16 @@ $(document).ready(function() {
                     targets: 3
                 },
                 {
+                    responsivePriority: 4,
+                    targets: 4
+                },
+                {
                     responsivePriority: 1,
                     targets: -1,
                     orderable: false
                 }
             ],
-            order: [[3, 'desc']],
+            order: [[4, 'desc']],
             pageLength: 10,
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
             language: {
@@ -216,7 +237,7 @@ $(document).ready(function() {
     // Load users data
     function loadUsers() {
         $.ajax({
-            url: '<?= base_url("users/get_users_ajax") ?>',
+            url: '<?= base_url("user_management/get_users_ajax") ?>',
             method: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -240,6 +261,9 @@ $(document).ready(function() {
                 index + 1,
                 escapeHtml(user.name),
                 escapeHtml(user.email),
+                user.department_name ? 
+                    `<span class="badge badge-info">${escapeHtml(user.department_name)}</span><br><small class="text-muted">${escapeHtml(user.department_code || '')}</small>` : 
+                    '<span class="badge badge-secondary">No Department</span>',
                 formatDate(user.created_at),
                 `<div class="btn-group btn-group-sm" role="group">
                     <button class="btn btn-warning btn-sm" onclick="editUser(${user.id})" title="Edit">
@@ -301,7 +325,7 @@ $(document).ready(function() {
         showLoading();
         
         $.ajax({
-            url: '<?= base_url("users/get_users_ajax") ?>',
+            url: '<?= base_url("user_management/get_users_ajax") ?>',
             method: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -312,7 +336,6 @@ $(document).ready(function() {
                     if (user) {
                         $('#name').val(user.name);
                         $('#email').val(user.email);
-                        $('#modal-title').text('Edit User');
                         $('#save-text').text('Update User');
                         $('#userModalLabel i').attr('class', 'fas fa-user-edit');
                         $('#userModal').modal('show');
@@ -341,7 +364,7 @@ $(document).ready(function() {
                 showLoading();
                 
                 $.ajax({
-                    url: '<?= base_url("users/delete_user_ajax") ?>',
+                    url: '<?= base_url("user_management/delete_user_ajax") ?>',
                     method: 'POST',
                     data: { id: id },
                     dataType: 'json',
@@ -385,8 +408,8 @@ $(document).ready(function() {
         e.preventDefault();
         
         const url = isEditMode ? 
-            '<?= base_url("users/update_user_ajax") ?>' : 
-            '<?= base_url("users/create_user_ajax") ?>';
+            '<?= base_url("user_management/update_user_ajax") ?>' : 
+            '<?= base_url("user_management/create_user_ajax") ?>';
         
         const formData = {
             name: $('#name').val().trim(),
@@ -482,6 +505,27 @@ $(document).ready(function() {
     
     $('#userModal').on('hidden.bs.modal', function() {
         startAutoRefresh();
+    });
+    
+    // Handle sidebar toggle untuk responsive DataTables
+    $(document).on('click', '[data-widget="pushmenu"]', function() {
+        setTimeout(function() {
+            // Force recalculate DataTable width
+            usersTable.columns.adjust();
+            usersTable.responsive.recalc();
+            
+            // Trigger window resize to force redraw
+            $(window).trigger('resize');
+        }, 350);
+    });
+
+    // Handle window resize
+    $(window).on('resize', function() {
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(function() {
+            usersTable.columns.adjust();
+            usersTable.responsive.recalc();
+        }, 250);
     });
     
     // Initialize everything

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User_model extends CI_Model {
+class User_management_model extends CI_Model {
 
     private $table = 'users';
 
@@ -18,13 +18,23 @@ class User_model extends CI_Model {
 
     public function get_all_users()
     {
-        $this->db->order_by('id', 'DESC');
-        return $this->db->get($this->table)->result_array();
+        $this->db->select('u.*, d.department_name, d.department_code, m.name as manager_name');
+        $this->db->from('users u');
+        $this->db->join('departments d', 'u.department_id = d.id', 'left');
+        $this->db->join('users m', 'd.manager_id = m.id', 'left');
+        $this->db->order_by('u.id', 'DESC');
+        return $this->db->get()->result_array();
     }
 
     public function get_user_by_id($id)
     {
-        return $this->db->get_where($this->table, array('id' => $id))->row_array();
+        $this->db->select('u.*, mr.role_name, d.department_name, d.department_code, m.name as manager_name');
+        $this->db->from('users u');
+        $this->db->join('master_role mr', 'u.role_id = mr.id', 'left');
+        $this->db->join('departments d', 'u.department_id = d.id', 'left');
+        $this->db->join('users m', 'd.manager_id = m.id', 'left');
+        $this->db->where('u.id', $id);
+        return $this->db->get()->row_array();
     }
 
     public function create_user($data)
@@ -45,8 +55,13 @@ class User_model extends CI_Model {
     }
 
     public function get_user_by_username($username) {
-        $this->db->where('username', $username);
-        $query = $this->db->get('users');
+        $this->db->select('u.*, mr.role_name, d.department_name, d.department_code, m.name as manager_name');
+        $this->db->from('users u');
+        $this->db->join('master_role mr', 'u.role_id = mr.id', 'left');
+        $this->db->join('departments d', 'u.department_id = d.id', 'left');
+        $this->db->join('users m', 'd.manager_id = m.id', 'left');
+        $this->db->where('u.username', $username);
+        $query = $this->db->get();
         return $query->row();
     }
 

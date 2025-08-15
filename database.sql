@@ -1,44 +1,44 @@
 CREATE DATABASE IF NOT EXISTS `crud_ajax` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `crud_ajax`;
 
+-- Tabel master_role untuk daftar role
+CREATE TABLE IF NOT EXISTS `master_role` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `role_name` VARCHAR(50) NOT NULL
+);
+
+-- Isi data awal master_role
+INSERT INTO `master_role` (`role_name`) VALUES
+('Admin'),
+('Manager'),
+('User');
+
+-- Tabel users dengan relasi ke master_role
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `password` varchar(255) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `last_login` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
-  KEY `status` (`status`)
+  KEY `username` (`username`),
+  KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `users` (`name`, `email`, `status`, `created_at`) VALUES
-('John Doe', 'john.doe@example.com', 'active', NOW()),
-('Jane Smith', 'jane.smith@example.com', 'active', NOW()),
-('Mike Johnson', 'mike.johnson@example.com', 'inactive', NOW()),
-('Sarah Wilson', 'sarah.wilson@example.com', 'active', NOW()),
-('David Brown', 'david.brown@example.com', 'active', NOW());
+INSERT INTO `users` (`name`, `username`, `email`, `password`, `role_id`, `is_active`, `last_login`) VALUES
+('John Doe', 'johndoe', 'john.doe@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, 1, NOW()),
+('Jane Smith', 'janesmith', 'jane.smith@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 1, NOW()),
+('Mike Johnson', 'mikejohnson', 'mike.johnson@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 3, 0, NOW()),
+('Sarah Wilson', 'sarahwilson', 'sarah.wilson@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, 1, NOW()),
+('David Brown', 'davidbrown', 'david.brown@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 1, NOW());
 
 DESCRIBE `users`;
 
 SELECT * FROM `users` ORDER BY `id` DESC;
-
-ALTER TABLE users 
-ADD COLUMN username VARCHAR(50) UNIQUE AFTER id,
-ADD COLUMN password VARCHAR(255) AFTER email,
-ADD COLUMN role ENUM('admin','manager','user') DEFAULT 'user' AFTER password,
-ADD COLUMN is_active TINYINT(1) DEFAULT 1 AFTER role,
-ADD COLUMN last_login DATETIME NULL AFTER is_active,
-ADD COLUMN profile_picture VARCHAR(255) NULL AFTER last_login;
-
-UPDATE users SET 
-    username = CONCAT('user', id),
-    password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-    role = 'user',
-    is_active = 1;
-
-UPDATE users SET role = 'admin', username = 'admin' WHERE id = 1;
 
 CREATE TABLE departments (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -84,3 +84,8 @@ INSERT INTO employees (employee_id, full_name, email, phone, department_id, posi
 ('EMP001', 'John Developer', 'john.dev@company.com', '081234567890', 1, 'Senior Developer', '2023-01-15', 8000000),
 ('EMP002', 'Jane Manager', 'jane.mgr@company.com', '081234567891', 2, 'HR Manager', '2022-03-20', 12000000),
 ('EMP003', 'Bob Analyst', 'bob.analyst@company.com', '081234567892', 3, 'Financial Analyst', '2023-06-10', 7000000);
+
+-- Contoh query JOIN untuk menampilkan user beserta nama role
+SELECT u.*, r.role_name
+FROM users u
+JOIN master_role r ON u.role_id = r.id;
