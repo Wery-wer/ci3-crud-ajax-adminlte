@@ -43,6 +43,7 @@ class User_registration extends CI_Controller {
     //     echo '<pre>';
     //     print_r($roles);
     //     echo '</pre>';
+    //     echo json_encode(['data' => $roles]);
     // }
 
     public function get_departments_ajax() {
@@ -50,10 +51,28 @@ class User_registration extends CI_Controller {
         echo json_encode(['status' => true, 'data' => $departments]);
     }
 
+    // public function test_depart()
+    // {
+    //     $users = $this->User_registration_model->get_all_departments();
+    //     echo '<pre>';
+    //     print_r($users);
+    //     echo '</pre>';
+    //     echo json_encode(['data' => $users]);
+    // }
+
     public function get_users_ajax() {
         $users = $this->User_registration_model->get_all_users_for_registration();
         echo json_encode(['data' => $users]);
     }
+
+    // public function test_user()
+    // {
+    //     $users = $this->User_registration_model->get_all_users_for_registration();
+    //     echo '<pre>';
+    //     print_r($users);
+    //     echo '</pre>';
+    //     echo json_encode(['data' => $users]);
+    // }
 
     public function add_user() {
         $this->form_validation->set_rules('name', 'Full Name', 'required');

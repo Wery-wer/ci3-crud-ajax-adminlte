@@ -1,5 +1,4 @@
 <?php
-// Script untuk generate password hash yang benar
 $password = 'admin123';
 $hash = password_hash($password, PASSWORD_DEFAULT);
 

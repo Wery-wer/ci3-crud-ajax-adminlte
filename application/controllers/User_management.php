@@ -53,6 +53,8 @@ class User_management extends CI_Controller {
             ->set_output(json_encode($response));
     }
 
+    
+
     public function create_user_ajax()
     {
         $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[2]|callback_check_name_unique');
