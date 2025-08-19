@@ -179,7 +179,7 @@
           <li class="nav-item">
             <a href="<?= base_url() ?>" class="nav-link <?= uri_string() == '' ? 'active' : '' ?>">
               <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Dashboard</p>
+                <p style="font-size: 1rem; font-family: 'Source Sans Pro', Arial, sans-serif;">Dashboard</p>
             </a>
           </li>
           

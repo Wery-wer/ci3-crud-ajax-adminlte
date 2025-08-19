@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Data akan diisi otomatis oleh DataTables -->
+                            
                         </tbody>
                     </table>
                 </div>
@@ -89,14 +89,12 @@
                         <label for="add_role">Role <span class="text-danger">*</span></label>
                         <select class="form-control" id="add_role" name="role_id" required>
                             <option value="">Select Role</option>
-                            <!-- Options will be loaded via AJAX -->
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="add_department">Department</label>
                         <select class="form-control" id="add_department" name="department_id">
                             <option value="">Select Department</option>
-                            <!-- Options will be loaded via AJAX -->
                         </select>
                     </div>
                 </div>
@@ -142,14 +140,12 @@
                         <label for="edit_role">Role <span class="text-danger">*</span></label>
                         <select class="form-control" id="edit_role" name="role_id" required>
                             <option value="">Select Role</option>
-                            <!-- Options will be loaded via AJAX -->
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="edit_department">Department</label>
                         <select class="form-control" id="edit_department" name="department_id">
                             <option value="">Select Department</option>
-                            <!-- Options will be loaded via AJAX -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -355,11 +351,8 @@ function initUserRegistration() {
         // Handle sidebar toggle untuk responsive DataTables
         $(document).on('click', '[data-widget="pushmenu"]', function() {
             setTimeout(function() {
-                // Force recalculate DataTable width
                 userTable.columns.adjust();
                 userTable.responsive.recalc();
-                
-                // Trigger window resize to force redraw
                 $(window).trigger('resize');
             }, 350);
         });
