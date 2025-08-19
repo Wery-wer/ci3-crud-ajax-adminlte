@@ -80,6 +80,7 @@ class User_registration extends CI_Controller {
         $this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
         $this->form_validation->set_rules('password', 'Password', 'required');
         $this->form_validation->set_rules('role_id', 'Role', 'required');
+        $this->form_validation->set_rules('department_id', 'Department', 'required');
         if ($this->form_validation->run() == FALSE) {
             echo json_encode(['status' => false, 'message' => validation_errors()]);
         } else {
@@ -118,6 +119,7 @@ class User_registration extends CI_Controller {
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('role_id', 'Role', 'required');
+        $this->form_validation->set_rules('department_id', 'Department', 'required');
         $this->form_validation->set_rules('is_active', 'Status', 'required');
         if ($this->form_validation->run() == FALSE) {
             echo json_encode(['status' => false, 'message' => validation_errors()]);

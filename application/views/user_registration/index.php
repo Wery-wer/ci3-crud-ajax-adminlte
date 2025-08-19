@@ -207,9 +207,9 @@ function initUserRegistration() {
                     data: 'department_name',
                     render: function(data, type, row) {
                         if (data) {
-                            return '<span class="badge badge-info">' + data + '</span><br><small class="text-muted">' + (row.department_code || '') + '</small>';
+                            return '<span class="">' + data + '</br></span><small class="text-muted">' + (row.department_code || '') + '</small>';
                         } else {
-                            return '<span class="badge badge-secondary">No Department</span>';
+                            return '<span class="">No Department</span>';
                         }
                     }
                 },
@@ -241,7 +241,6 @@ function initUserRegistration() {
             autoWidth: false,
             order: [[0, 'desc']],
             drawCallback: function() {
-                // Force adjust columns after each draw
                 this.api().columns.adjust();
             }
         });
@@ -288,9 +287,17 @@ function initUserRegistration() {
                         $('#addUserModal').modal('hide');
                         $('#addUserForm')[0].reset();
                         userTable.ajax.reload();
-                        alert('User added successfully!');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message
+                        });
                     } else {
-                        alert('Failed to add user: ' + response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message
+                        });
                     }
                 },
                 error: function() {
@@ -312,13 +319,25 @@ function initUserRegistration() {
                         $('#editUserModal').modal('hide');
                         $('#editUserForm')[0].reset();
                         userTable.ajax.reload();
-                        alert('User updated successfully!');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'User updated successfully!'
+                        });
                     } else {
-                        alert('Failed to update user: ' + response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to update user: ' + response.message
+                        });
                     }
                 },
                 error: function() {
-                    alert('Error updating user.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error updating user.'
+                    });
                 }
             });
         });
@@ -327,26 +346,47 @@ function initUserRegistration() {
         $('#usersTable tbody').on('click', '.delete-btn', function() {
             var userId = $(this).data('id');
             var userName = $(this).data('name');
-            if (confirm('Are you sure you want to delete user "' + userName + '"?')) {
-                $.ajax({
-                    url: "<?php echo base_url('user_registration/delete_user'); ?>",
-                    type: "POST",
-                    data: {id: userId},
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.status) {
-                            userTable.ajax.reload();
-                            alert('User deleted successfully!');
-                        } else {
-                            alert('Failed to delete user: ' + response.message);
+            Swal.fire({
+                title: 'Delete User',
+                text: 'Are you sure you want to delete user "' + userName + '"?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "<?php echo base_url('user_registration/delete_user'); ?>",
+                        type: "POST",
+                        data: {id: userId},
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.status) {
+                                userTable.ajax.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error deleting user.'
+                            });
                         }
-                    },
-                    error: function() {
-                        alert('Error deleting user.');
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+            });
 
         // Handle sidebar toggle untuk responsive DataTables
         $(document).on('click', '[data-widget="pushmenu"]', function() {
