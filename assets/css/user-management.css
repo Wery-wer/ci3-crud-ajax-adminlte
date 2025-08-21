@@ -1,0 +1,85 @@
+/* User Management Styles */
+
+/* Pastikan DataTables responsive dan menggunakan full width */
+.dataTables_wrapper {
+    width: 100% !important;
+}
+
+#usersTable {
+    width: 100% !important;
+}
+
+.table-responsive {
+    width: 100% !important;
+    overflow-x: auto;
+}
+
+/* Force table to recalculate when sidebar changes */
+.sidebar-collapse .content-wrapper .dataTables_wrapper,
+.sidebar-open .content-wrapper .dataTables_wrapper {
+    width: 100% !important;
+}
+
+/* Alert container styling */
+#alert-container {
+    margin-bottom: 15px;
+}
+
+/* Button group styling */
+.btn-group-sm > .btn {
+    margin-right: 2px;
+}
+
+.btn-group-sm > .btn:last-child {
+    margin-right: 0;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.875em;
+}
+
+/* Table responsive enhancements */
+@media (max-width: 768px) {
+    .table-responsive {
+        border: none;
+    }
+    
+    .btn-group-sm > .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Loading overlay (if implemented) */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    color: white;
+    font-size: 2rem;
+}
+
+/* Refresh status indicator */
+.refresh-status {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.refresh-status.active {
+    color: #28a745;
+}
+
+.refresh-status.inactive {
+    color: #6c757d;
+}

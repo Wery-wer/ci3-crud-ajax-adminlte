@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
+<!-- Include Profile Styles -->
+<link rel="stylesheet" href="<?php echo base_url('assets/css/profile.css'); ?>">
+
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -154,61 +157,10 @@
     </div>
 </div>
 
+<!-- Include JavaScript Base URL -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof jQuery === 'undefined') {
-        setTimeout(function() {
-            initProfile();
-        }, 100);
-    } else {
-        initProfile();
-    }
-});
-
-function initProfile() {
-    $(document).ready(function() {
-        $('#editProfileForm').on('submit', function(e) {
-            e.preventDefault();
-            
-            var formData = $(this).serialize();
-            var submitBtn = $(this).find('button[type="submit"]');
-            
-            submitBtn.prop('disabled', true).text('Updating...');
-            
-            $.ajax({
-                url: "<?php echo base_url('profile/update_profile_ajax'); ?>",
-                type: "POST",
-                data: formData,
-                dataType: "json",
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: response.message
-                        }).then(function() {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: response.message
-                        });
-                    }
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Something went wrong!'
-                    });
-                },
-                complete: function() {
-                    submitBtn.prop('disabled', false).text('Update Profile');
-                }
-            });
-        });
-    });
-}
+var BASE_URL = "<?php echo base_url(); ?>";
 </script>
+
+<!-- Include Profile JavaScript -->
+<script src="<?php echo base_url('assets/js/profile.js'); ?>"></script>

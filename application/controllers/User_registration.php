@@ -4,7 +4,7 @@ class User_registration extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('User_registration_model');
-        $this->load->helper(['url', 'form']);
+        $this->load->helper(['url', 'form', 'date_format']);
         $this->load->library(['form_validation', 'session']);
         
         // Check if user is logged in
@@ -65,14 +65,14 @@ class User_registration extends CI_Controller {
         echo json_encode(['data' => $users]);
     }
 
-    // public function test_user()
-    // {
-    //     $users = $this->User_registration_model->get_all_users_for_registration();
-    //     echo '<pre>';
-    //     print_r($users);
-    //     echo '</pre>';
-    //     echo json_encode(['data' => $users]);
-    // }
+    public function test_user()
+    {
+        $users = $this->User_registration_model->get_all_users_for_registration();
+        echo '<pre>';
+        print_r($users);
+        echo '</pre>';
+        echo json_encode(['data' => $users]);
+    }
 
     public function add_user() {
         $this->form_validation->set_rules('name', 'Full Name', 'required');
@@ -81,11 +81,45 @@ class User_registration extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required');
         $this->form_validation->set_rules('role_id', 'Role', 'required');
         $this->form_validation->set_rules('department_id', 'Department', 'required');
+        
         if ($this->form_validation->run() == FALSE) {
             echo json_encode(['status' => false, 'message' => validation_errors()]);
         } else {
-            $result = $this->User_registration_model->create_user($this->input->post());
-            echo json_encode(['status' => $result, 'message' => $result ? 'User added successfully' : 'Failed to add user']);
+            $data = $this->input->post();
+            
+            // Extract job history data
+            $job_history = isset($data['job_history']) ? $data['job_history'] : [];
+            unset($data['job_history']); // Remove from user data
+            
+            // Konversi tanggal user menggunakan helper
+            $data = convert_form_dates_to_db($data, ['tanggal_lahir']);
+            
+            // Create user first
+            $user_id = $this->User_registration_model->create_user($data);
+            
+            if ($user_id) {
+                // Save job history if provided
+                if (!empty($job_history)) {
+                    $this->load->model('Riwayat_pekerjaan_model');
+                    
+                    foreach ($job_history as $job) {
+                        // Skip empty job entries
+                        if (empty($job['namaperusahaan']) && empty($job['titlepekerjaan'])) {
+                            continue;
+                        }
+                        
+                        // Konversi tanggal job history menggunakan helper
+                        $job = convert_form_dates_to_db($job, ['tanggalmasuk', 'tanggalkeluar']);
+                        
+                        $job['user_id'] = $user_id;
+                        $this->Riwayat_pekerjaan_model->insert($job);
+                    }
+                }
+                
+                echo json_encode(['status' => true, 'message' => 'User and job history added successfully']);
+            } else {
+                echo json_encode(['status' => false, 'message' => 'Failed to add user']);
+            }
         }
     }
 
@@ -93,38 +127,58 @@ class User_registration extends CI_Controller {
         $user_id = $this->input->post('id');
         $user = $this->User_registration_model->get_user_by_id($user_id);
         if ($user) {
+            // Konversi tanggal dari database ke display format menggunakan helper
+            $user = format_dates_in_object($user);
             echo json_encode(['status' => true, 'data' => $user]);
         } else {
             echo json_encode(['status' => false, 'message' => 'User not found']);
         }
     }
 
-    // public function test_getid()
-    // {
-    //     $user = $this->User_registration_model->get_user_by_id(46);
-    //     echo '<pre>';
-    //     print_r($user);
-    //     echo '</pre>';
-    //     // echo json_encode($user);
-    //     $query = $this->db->get('users');
-    //     echo '</pre>';
-    //     // print_r($query->row_array());
-    //     // print_r($query->row());
-    //     // print_r($query->result_array());
-    //     print_r($query->result());
-    // }
+    public function test_getid()
+    {
+        $user = $this->User_registration_model->get_user_by_id(46);
+        echo '<pre>';
+        print_r($user);
+        echo '</pre>';
+        echo json_encode($user);
+        // $query = $this->db->get('users');
+        // echo '</pre>';
+        // print_r($query->row_array());
+        // print_r($query->row());
+        // print_r($query->result_array());
+        // print_r($query->result());
+    }
 
     public function update_user() {
         $this->form_validation->set_rules('name', 'Full Name', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('role_id', 'Role', 'required');
-        $this->form_validation->set_rules('department_id', 'Department', 'required');
         $this->form_validation->set_rules('is_active', 'Status', 'required');
+        
         if ($this->form_validation->run() == FALSE) {
             echo json_encode(['status' => false, 'message' => validation_errors()]);
         } else {
-            $result = $this->User_registration_model->update_user($this->input->post());
+            $data = $this->input->post();
+            
+            // Handle tanggal_lahir conversion from profile edit
+            if (!empty($data['tanggal_lahir_formatted'])) {
+                $data['tanggal_lahir'] = $data['tanggal_lahir_formatted'];
+                unset($data['tanggal_lahir_formatted']);
+            }
+            
+            // Konversi tanggal menggunakan helper
+            $data = convert_form_dates_to_db($data, ['tanggal_lahir']);
+            
+            // Handle password update - only update if provided
+            if (empty($data['password'])) {
+                unset($data['password']);
+            } else {
+                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+            
+            $result = $this->User_registration_model->update_user($data);
             echo json_encode(['status' => $result, 'message' => $result ? 'User updated successfully' : 'Failed to update user']);
         }
     }

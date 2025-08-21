@@ -1,0 +1,236 @@
+/* Profile Styles */
+
+/* Profile image enhancements */
+.profile-user-img {
+    border: 3px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile username styling */
+.profile-username {
+    color: #495057;
+    font-weight: 600;
+}
+
+/* Badge styling for roles */
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-primary {
+    background-color: #007bff;
+}
+
+.badge-success {
+    background-color: #28a745;
+}
+
+/* List group enhancements */
+.list-group-unbordered > .list-group-item {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Timeline styling */
+.timeline {
+    position: relative;
+    margin: 0 0 30px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 30px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline > li {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.timeline > li:before,
+.timeline > li:after {
+    content: " ";
+    display: table;
+}
+
+.timeline > li:after {
+    clear: both;
+}
+
+.timeline > li > .timeline-item {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    margin-top: 0;
+    background: #fff;
+    color: #444;
+    margin-left: 60px;
+    margin-right: 15px;
+    padding: 0;
+    position: relative;
+}
+
+.timeline > li > .timeline-item > .time {
+    color: #999;
+    float: right;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.timeline > li > .timeline-item > .timeline-header {
+    margin: 0;
+    color: #555;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.timeline > li > .timeline-item > .timeline-body,
+.timeline > li > .timeline-item > .timeline-footer {
+    padding: 10px;
+}
+
+.timeline > li > .fa,
+.timeline > li > .fas,
+.timeline > li > .far,
+.timeline > li > .fab,
+.timeline > li > .fal,
+.timeline > li > .fad,
+.timeline > li > .svg-inline--fa {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    line-height: 30px;
+    position: absolute;
+    color: #666;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+    left: 18px;
+    top: 0;
+}
+
+/* Time label styling */
+.time-label > span {
+    font-weight: 600;
+    padding: 5px 10px;
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+/* Modal form enhancements */
+.modal-body .form-group label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.modal-body .form-control {
+    border-radius: 0.375rem;
+}
+
+.modal-body .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Password strength indicator */
+#password-strength {
+    margin-top: 0.25rem;
+}
+
+#password-strength small {
+    font-weight: 500;
+}
+
+/* Form validation feedback */
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.valid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #28a745;
+}
+
+/* Card enhancements */
+.card-primary.card-outline {
+    border-top: 3px solid #007bff;
+}
+
+.card .card-body.box-profile {
+    text-align: center;
+}
+
+/* Button enhancements */
+.btn-block {
+    width: 100%;
+}
+
+.btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .timeline > li > .timeline-item {
+        margin-left: 45px;
+        margin-right: 10px;
+    }
+    
+    .timeline > li > .fa,
+    .timeline > li > .fas,
+    .timeline > li > .far,
+    .timeline > li > .fab,
+    .timeline > li > .fal,
+    .timeline > li > .fad,
+    .timeline > li > .svg-inline--fa {
+        left: 15px;
+    }
+    
+    .timeline:before {
+        left: 30px;
+    }
+}
+
+/* Animation for form feedback */
+.form-control.is-valid,
+.form-control.is-invalid {
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-2px);
+    }
+    75% {
+        transform: translateX(2px);
+    }
+}

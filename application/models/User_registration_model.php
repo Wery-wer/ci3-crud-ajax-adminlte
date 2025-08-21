@@ -32,10 +32,16 @@ class User_registration_model extends CI_Model {
             'password' => password_hash($data['password'], PASSWORD_DEFAULT),
             'role_id' => $data['role_id'],
             'department_id' => !empty($data['department_id']) ? $data['department_id'] : null,
+            'tanggal_lahir' => !empty($data['tanggal_lahir']) ? $data['tanggal_lahir'] : null,
             'is_active' => 1,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        return $this->db->insert('users', $insert);
+        
+        if ($this->db->insert('users', $insert)) {
+            return $this->db->insert_id();
+        } else {
+            return false;
+        }
     }
 
     public function update_user($data) {
@@ -45,6 +51,7 @@ class User_registration_model extends CI_Model {
             'username' => $data['username'],
             'role_id' => $data['role_id'],
             'department_id' => !empty($data['department_id']) ? $data['department_id'] : null,
+            'tanggal_lahir' => !empty($data['tanggal_lahir']) ? $data['tanggal_lahir'] : null,
             'is_active' => $data['is_active']
         ];
         if (!empty($data['password'])) {

@@ -1,0 +1,176 @@
+/* User Registration Styles */
+
+/* Pastikan DataTables responsive dan menggunakan full width */
+.dataTables_wrapper {
+    width: 100% !important;
+}
+
+#usersTable {
+    width: 100% !important;
+}
+
+.table-responsive {
+    width: 100% !important;
+    overflow-x: auto;
+}
+
+/* Force table to recalculate when sidebar changes */
+.sidebar-collapse .content-wrapper .dataTables_wrapper,
+.sidebar-open .content-wrapper .dataTables_wrapper {
+    width: 100% !important;
+}
+
+/* Modal enhancements */
+.modal-xl {
+    max-width: 1200px;
+}
+
+@media (max-width: 1200px) {
+    .modal-xl {
+        max-width: 95%;
+    }
+}
+
+/* Job history form styling */
+.job-history-item {
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.job-history-item h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Form validation styles */
+.form-control.is-valid {
+    border-color: #28a745;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='m2.3 6.73.94-.94 1.08 1.08-2.02 2.02L.64 7.23l.94-.94z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.7.7-1.4 1.4 1.4 1.4-.7.7-1.4-1.4-1.4 1.4-.7-.7 1.4-1.4-1.4-1.4.7-.7 1.4 1.4z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Date picker enhancements */
+.datepicker {
+    border-radius: 0.375rem;
+}
+
+.datepicker table tr td.active,
+.datepicker table tr td.active:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.datepicker table tr td.today {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* Tab styling */
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+.nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+/* Badge enhancements */
+.badge {
+    font-size: 0.875em;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-primary {
+    background-color: #007bff;
+}
+
+.badge-success {
+    background-color: #28a745;
+}
+
+/* Button enhancements */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+/* Card enhancements */
+.card-tools .btn {
+    margin-left: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-xl {
+        max-width: 100%;
+        margin: 0.5rem;
+    }
+    
+    .job-history-item {
+        padding: 1rem;
+    }
+    
+    .btn-group-sm > .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Job history card styling */
+.job-history-list .card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.job-history-list .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form container styling */
+#job-form-container {
+    margin-top: 1rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

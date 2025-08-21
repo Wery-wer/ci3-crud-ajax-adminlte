@@ -1,25 +1,5 @@
-<!-- Main content -->
-<style>
-/* Pastikan DataTables responsive dan menggunakan full width */
-.dataTables_wrapper {
-    width: 100% !important;
-}
-
-#usersTable {
-    width: 100% !important;
-}
-
-.table-responsive {
-    width: 100% !important;
-    overflow-x: auto;
-}
-
-/* Force table to recalculate when sidebar changes */
-.sidebar-collapse .content-wrapper .dataTables_wrapper,
-.sidebar-open .content-wrapper .dataTables_wrapper {
-    width: 100% !important;
-}
-</style>
+<!-- Include User Registration Styles -->
+<link rel="stylesheet" href="<?php echo base_url('assets/css/user-registration.css'); ?>">
 
 <div class="container-fluid">
     <div class="row">
@@ -44,6 +24,7 @@
                                 <th>Department</th>
                                 <th>Status</th>
                                 <th>Last Login</th>
+                                <th>Detail</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -57,9 +38,9 @@
     </div>
 </div>
 
-<!-- Modal untuk Add User -->
+<!-- Modal untuk Add User dengan Tabs -->
 <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
@@ -69,33 +50,106 @@
             </div>
             <form id="addUserForm">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="add_name">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="add_name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="add_email">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" id="add_email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="add_username">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="add_username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="add_password">Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control" id="add_password" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="add_role">Role <span class="text-danger">*</span></label>
-                        <select class="form-control" id="add_role" name="role_id" required>
-                            <option value="">Select Role</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="add_department">Department</label>
-                        <select class="form-control" id="add_department" name="department_id">
-                            <option value="">Select Department</option>
-                        </select>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="addUserTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="user-info-tab" data-toggle="tab" href="#user-info" role="tab">
+                                <i class="fas fa-user"></i> User Information
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="job-history-tab" data-toggle="tab" href="#job-history" role="tab">
+                                <i class="fas fa-briefcase"></i> Riwayat Pekerjaan
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab content -->
+                    <div class="tab-content mt-3" id="addUserTabContent">
+                        <!-- Page 1: User Information -->
+                        <div class="tab-pane fade show active" id="user-info" role="tabpanel">
+                            <div class="form-group">
+                                <label for="add_name">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="add_name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add_dob">Tanggal Lahir</label>
+                                <input type="text" class="form-control dob-picker" id="add_dob" name="tanggal_lahir" autocomplete="off" placeholder="dd.mm.yyyy">
+                            </div>
+                            <div class="form-group">
+                                <label for="add_email">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="add_email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add_username">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="add_username" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add_password">Password <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="add_password" name="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="add_role">Role <span class="text-danger">*</span></label>
+                                <select class="form-control" id="add_role" name="role_id" required>
+                                    <option value="">Select Role</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="add_department">Department</label>
+                                <select class="form-control" id="add_department" name="department_id">
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Page 2: Riwayat Pekerjaan -->
+                        <div class="tab-pane fade" id="job-history" role="tabpanel">
+                            <div id="job-history-forms">
+                                <div class="job-history-item border p-3 mb-3">
+                                    <h6>Riwayat Pekerjaan #1</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Nama Perusahaan</label>
+                                                <input type="text" class="form-control" name="job_history[0][namaperusahaan]" placeholder="PT. Nama Perusahaan">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Title Pekerjaan</label>
+                                                <input type="text" class="form-control" name="job_history[0][titlepekerjaan]" placeholder="Frontend Developer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Tanggal Masuk</label>
+                                                <input type="text" class="form-control job-date-picker" name="job_history[0][tanggalmasuk]" placeholder="dd.mm.yyyy" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Tanggal Keluar</label>
+                                                <input type="text" class="form-control job-date-picker" name="job_history[0][tanggalkeluar]" placeholder="dd.mm.yyyy (kosongkan jika masih bekerja)" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Universitas/Pendidikan</label>
+                                        <input type="text" class="form-control" name="job_history[0][universitas]" placeholder="Universitas Telkom">
+                                    </div>
+                                    <button type="button" class="btn btn-danger btn-sm remove-job-history" style="display: none;">
+                                        <i class="fas fa-trash"></i> Hapus Riwayat Ini
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="btn btn-success btn-sm" id="add-job-history">
+                                <i class="fas fa-plus"></i> Tambah Riwayat Pekerjaan
+                            </button>
+                
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -123,6 +177,10 @@
                     <div class="form-group">
                         <label for="edit_name">Full Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="edit_name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_dob">Tanggal Lahir</label>
+                        <input type="text" class="form-control dob-picker" id="edit_dob" name="tanggal_lahir" autocomplete="off" placeholder="dd.mm.yyyy">
                     </div>
                     <div class="form-group">
                         <label for="edit_email">Email <span class="text-danger">*</span></label>
@@ -165,300 +223,94 @@
     </div>
 </div>
 
+<!-- Modal Detail Riwayat Pekerjaan -->
+<div class="modal fade" id="modalDetailRiwayat" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailModalLabel">Riwayat Pekerjaan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 id="user-info-header">Riwayat Pekerjaan</h6>
+          <button type="button" class="btn btn-success btn-sm" id="add-new-job-history">
+            <i class="fas fa-plus"></i> Tambah Riwayat Baru
+          </button>
+        </div>
+        
+        <div id="job-history-list">
+          <!-- Job history akan dimuat di sini -->
+        </div>
+        
+        <!-- Form untuk add/edit riwayat pekerjaan -->
+        <div id="job-form-container" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h6 id="job-form-title">Tambah Riwayat Pekerjaan</h6>
+            </div>
+            <div class="card-body">
+              <form id="jobHistoryForm">
+                <input type="hidden" id="job_id" name="job_id">
+                <input type="hidden" id="job_user_id" name="user_id">
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="job_namaperusahaan">Nama Perusahaan <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="job_namaperusahaan" name="namaperusahaan" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="job_titlepekerjaan">Title Pekerjaan <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="job_titlepekerjaan" name="titlepekerjaan" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="job_tanggalmasuk">Tanggal Masuk <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control job-detail-date-picker" id="job_tanggalmasuk" name="tanggalmasuk" placeholder="dd.mm.yyyy" autocomplete="off" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="job_tanggalkeluar">Tanggal Keluar</label>
+                      <input type="text" class="form-control job-detail-date-picker" id="job_tanggalkeluar" name="tanggalkeluar" placeholder="dd.mm.yyyy (kosongkan jika masih bekerja)" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="job_universitas">Universitas/Pendidikan</label>
+                  <input type="text" class="form-control" id="job_universitas" name="universitas">
+                </div>
+                
+                <div class="text-right">
+                  <button type="button" class="btn btn-secondary" id="cancel-job-form">Batal</button>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Include JavaScript Base URL -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof jQuery === 'undefined') {
-        setTimeout(function() {
-            initUserRegistration();
-        }, 100);
-    } else {
-        initUserRegistration();
-    }
-});
-
-function initUserRegistration() {
-    $(document).ready(function() {
-        // Load roles untuk dropdown
-        loadRoles();
-        
-        // Load departments untuk dropdown
-        loadDepartments();
-        
-        var userTable = $('#usersTable').DataTable({
-            ajax: {
-                url: "<?php echo base_url('user_registration/get_users_ajax'); ?>",
-                type: "POST"
-            },
-            columns: [
-                {data: 'id'},
-                {data: 'name'},
-                {data: 'username'},
-                {
-                    data: 'role_name', //role_name ini diambil dari hasil convert JSON yang ada di dalam array table master_role
-                    render: function(data, type, row) {
-                        let color = 'info';
-                        if (data.toLowerCase() === 'admin') color = 'danger';
-                        else if (data.toLowerCase() === 'manager') color = 'warning';
-                        else if (data.toLowerCase() === 'user') color = 'primary';
-                        return '<span class="badge badge-' + color + '">' + data + '</span>';
-                    }
-                },
-                {
-                    data: 'department_name',
-                    render: function(data, type, row) {
-                        if (data) {
-                            return '<span class="">' + data + '</br></span><small class="text-muted">' + (row.department_code || '') + '</small>';
-                        } else {
-                            return '<span class="">No Department</span>';
-                        }
-                    }
-                },
-                {
-                    data: 'is_active',
-                    render: function(data, type, row) {
-                        return data == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
-                    }
-                },
-                {
-                    data: 'last_login',
-                    render: function(data, type, row) {
-                        return data ? data : 'Never';
-                    }
-                },
-                {
-                    data: null,
-                    orderable: false,
-                    render: function(data, type, row) {
-                        return '<button class="btn btn-sm btn-warning edit-btn" data-id="'+row.id+'"><i class="fas fa-edit"></i> Edit</button> ' +
-                               '<button class="btn btn-sm btn-danger delete-btn" data-id="'+row.id+'" data-name="'+row.name+'"><i class="fas fa-trash"></i> Delete</button>';
-                    }
-                }
-            ],
-            processing: true,
-            serverSide: false,
-            responsive: true,
-            scrollX: true,
-            autoWidth: false,
-            order: [[0, 'desc']],
-            drawCallback: function() {
-                this.api().columns.adjust();
-            }
-        });
-
-        // untuk membuka modal edit
-        $('#usersTable tbody').on('click', '.edit-btn', function() {
-            var userId = $(this).data('id');
-            $.ajax({
-                url: "<?php echo base_url('user_registration/get_user_by_id'); ?>",
-                type: "POST",
-                data: {id: userId},
-                dataType: "json",
-                success: function(response) {
-                    if (response.status) {
-                        var user = response.data;
-                        $('#edit_user_id').val(user.id);
-                        $('#edit_name').val(user.name);
-                        $('#edit_email').val(user.email);
-                        $('#edit_username').val(user.username);
-                        $('#edit_role').val(user.role_id);
-                        $('#edit_department').val(user.department_id);
-                        $('#edit_status').val(user.is_active);
-                        $('#editUserModal').modal('show');
-                    } else {
-                        alert('User not found!');
-                    }
-                },
-                error: function() {
-                    alert('Error retrieving user data.');
-                }
-            });
-        });
-
-        // untuk menambahkan user
-        $('#addUserForm').on('submit', function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: "<?php echo base_url('user_registration/add_user'); ?>",
-                type: "POST",
-                data: $(this).serialize(),
-                dataType: "json",
-                success: function(response) {
-                    if (response.status) {
-                        $('#addUserModal').modal('hide');
-                        $('#addUserForm')[0].reset();
-                        userTable.ajax.reload();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function() {
-                    alert('Error adding user.');
-                }
-            });
-        });
-
-        // untuk mengedit user
-        $('#editUserForm').on('submit', function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: "<?php echo base_url('user_registration/update_user'); ?>",
-                type: "POST",
-                data: $(this).serialize(),
-                dataType: "json",
-                success: function(response) {
-                    if (response.status) {
-                        $('#editUserModal').modal('hide');
-                        $('#editUserForm')[0].reset();
-                        userTable.ajax.reload();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'User updated successfully!'
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to update user: ' + response.message
-                        });
-                    }
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error updating user.'
-                    });
-                }
-            });
-        });
-
-        // untuk menghapus user
-        $('#usersTable tbody').on('click', '.delete-btn', function() {
-            var userId = $(this).data('id');
-            var userName = $(this).data('name');
-            Swal.fire({
-                title: 'Delete User',
-                text: 'Are you sure you want to delete user "' + userName + '"?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "<?php echo base_url('user_registration/delete_user'); ?>",
-                        type: "POST",
-                        data: {id: userId},
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.status) {
-                                userTable.ajax.reload();
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: response.message
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: response.message
-                                });
-                            }
-                        },
-                        error: function() {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Error deleting user.'
-                            });
-                        }
-                    });
-                }
-            });
-            });
-
-        // Handle sidebar toggle untuk responsive DataTables
-        $(document).on('click', '[data-widget="pushmenu"]', function() {
-            setTimeout(function() {
-                userTable.columns.adjust();
-                userTable.responsive.recalc();
-                $(window).trigger('resize');
-            }, 350);
-        });
-
-        // Handle window resize
-        $(window).on('resize', function() {
-            clearTimeout(window.resizeTimer);
-            window.resizeTimer = setTimeout(function() {
-                userTable.columns.adjust();
-                userTable.responsive.recalc();
-            }, 250);
-        });
-    });
-}
-
-// function untuk load roles ke dropdown
-function loadRoles() {
-    $.ajax({
-        url: "<?php echo base_url('user_registration/get_roles_ajax'); ?>",
-        type: "POST",
-        dataType: "json",
-        success: function(response) {
-            if (response.status && response.data) {
-                var roleOptions = '<option value="">Select Role</option>';
-                $.each(response.data, function(index, role) {
-                    roleOptions += '<option value="' + role.id + '">' + role.role_name + '</option>';
-                });
-                $('#add_role').html(roleOptions);
-                $('#edit_role').html(roleOptions);
-            } else {
-                $('#add_role').html('<option value="">No roles available</option>');
-                $('#edit_role').html('<option value="">No roles available</option>');
-            }
-        },
-        error: function() {
-            console.log('Error loading roles');
-            $('#add_role').html('<option value="">Error loading roles</option>');
-            $('#edit_role').html('<option value="">Error loading roles</option>');
-        }
-    });
-}
-
-// function untuk load departments ke dropdown
-function loadDepartments() {
-    $.ajax({
-        url: "<?php echo base_url('user_registration/get_departments_ajax'); ?>",
-        type: "POST",
-        dataType: "json",
-        success: function(response) {
-            if (response.status && response.data) {
-                var departmentOptions = '<option value="">Select Department</option>';
-                $.each(response.data, function(index, department) {
-                    departmentOptions += '<option value="' + department.id + '">' + department.department_name + ' (' + department.department_code + ')</option>';
-                });
-                $('#add_department').html(departmentOptions);
-                $('#edit_department').html(departmentOptions);
-            } else {
-                $('#add_department').html('<option value="">No departments available</option>');
-                $('#edit_department').html('<option value="">No departments available</option>');
-            }
-        },
-        error: function() {
-            console.log('Error loading departments');
-            $('#add_department').html('<option value="">Error loading departments</option>');
-            $('#edit_department').html('<option value="">Error loading departments</option>');
-        }
-    });
-}
+var BASE_URL = "<?php echo base_url(); ?>";
 </script>
+
+<!-- Include External JavaScript -->
+<script src="<?php echo base_url('assets/js/user-registration.js'); ?>"></script>

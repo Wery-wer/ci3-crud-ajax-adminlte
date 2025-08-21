@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Add Job Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Direct Add Job History Test</h1>
+        <p class="text-info">This page directly simulates the exact same AJAX call as the modal form.</p>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Add Job History Form</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="jobHistoryForm">
+                            <input type="hidden" id="job_user_id" name="user_id" value="46">
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="job_namaperusahaan">Nama Perusahaan <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="job_namaperusahaan" name="namaperusahaan" value="Test Company Direct" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="job_titlepekerjaan">Title Pekerjaan <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="job_titlepekerjaan" name="titlepekerjaan" value="Test Job Direct" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="job_tanggalmasuk">Tanggal Masuk <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="job_tanggalmasuk" name="tanggalmasuk" value="01.01.2024" placeholder="dd.mm.yyyy" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="job_tanggalkeluar">Tanggal Keluar</label>
+                                        <input type="text" class="form-control" id="job_tanggalkeluar" name="tanggalkeluar" value="31.12.2024" placeholder="dd.mm.yyyy">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="job_universitas">Universitas/Pendidikan</label>
+                                <input type="text" class="form-control" id="job_universitas" name="universitas" value="Test University Direct">
+                            </div>
+                            
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Simpan (Test)</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Debug Info</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="debugInfo">
+                            <p><strong>Form Status:</strong> Ready</p>
+                            <p><strong>User ID:</strong> <span id="currentUserId">46</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Test Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="testResults">No tests run yet.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost/ci3-noreload/';
+        let currentUserId = 46;
+
+        // Exact copy of the modal form submit handler
+        $("#jobHistoryForm").on("submit", function (e) {
+            e.preventDefault();
+
+            const isEdit = $("#job_id").val() !== "";
+            const url = isEdit
+                ? BASE_URL + "riwayat_pekerjaan/update_job_history"
+                : BASE_URL + "riwayat_pekerjaan/add_job_history";
+
+            // Debug: Log form data
+            const formData = $(this).serialize();
+            console.log("Form submission:", {
+                isEdit: isEdit,
+                url: url,
+                formData: formData,
+                currentUserId: currentUserId
+            });
+
+            // Update debug info
+            $('#debugInfo').html(
+                `<p><strong>Form Status:</strong> Submitting...</p>
+                 <p><strong>User ID:</strong> ${currentUserId}</p>
+                 <p><strong>Is Edit:</strong> ${isEdit}</p>
+                 <p><strong>URL:</strong> ${url}</p>
+                 <p><strong>Form Data:</strong><br><code>${formData}</code></p>`
+            );
+
+            // Additional validation
+            const namaperusahaan = $("#job_namaperusahaan").val();
+            const titlepekerjaan = $("#job_titlepekerjaan").val();
+            const tanggalmasuk = $("#job_tanggalmasuk").val();
+            
+            if (!namaperusahaan || !titlepekerjaan || !tanggalmasuk) {
+                Swal.fire({
+                    icon: "error", 
+                    title: "Validasi Error",
+                    text: "Nama perusahaan, title pekerjaan, dan tanggal masuk harus diisi!"
+                });
+                return;
+            }
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                beforeSend: function() {
+                    console.log("AJAX request starting...");
+                    $('#testResults').html('<div class="alert alert-info">Sending request...</div>');
+                },
+                success: function (response) {
+                    console.log("AJAX response:", response);
+                    
+                    $('#testResults').html(
+                        `<div class="alert alert-${response.status ? 'success' : 'danger'}">
+                            <h6>Server Response:</h6>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Message:</strong> ${response.message}<br>
+                            <br>
+                            <strong>Full Response:</strong><br>
+                            <pre>${JSON.stringify(response, null, 2)}</pre>
+                        </div>`
+                    );
+                    
+                    if (response.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: response.message,
+                        });
+                    } else {
+                        console.error("Server returned error:", response.message);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message,
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", {
+                        status: status,
+                        error: error,
+                        responseText: xhr.responseText,
+                        statusCode: xhr.status
+                    });
+                    
+                    $('#testResults').html(
+                        `<div class="alert alert-danger">
+                            <h6>AJAX Error:</h6>
+                            <strong>HTTP Status:</strong> ${xhr.status}<br>
+                            <strong>Status Text:</strong> ${status}<br>
+                            <strong>Error:</strong> ${error}<br>
+                            <strong>Response:</strong><br>
+                            <pre>${xhr.responseText}</pre>
+                        </div>`
+                    );
+                    
+                    let errorMessage = "Terjadi kesalahan saat menyimpan data.";
+                    if (xhr.responseText) {
+                        try {
+                            const errorResponse = JSON.parse(xhr.responseText);
+                            errorMessage = errorResponse.message || errorMessage;
+                        } catch (e) {
+                            errorMessage += " Response: " + xhr.responseText.substring(0, 200);
+                        }
+                    }
+                    
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: errorMessage,
+                    });
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            console.log('Direct test page loaded');
+            $('#testResults').html('<div class="alert alert-info">Ready for testing. Submit the form to test add_job_history.</div>');
+        });
+    </script>
+</body>
+</html>
