@@ -148,6 +148,9 @@
       <div class="card-header">
         <h3 class="card-title">Kirana Event</h3>
       </div>
+      <div class="card-body">
+        <img src="assets/logo.jpg" alt="Logo Event" style="margin-left: 50px;max-width: 200px;">
+      </div>
     </div>
 
     <div class="card">
@@ -155,6 +158,28 @@
         <h3 class="card-title">Kirana Social Media</h3>
       </div>
       <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <a href="https://facebook.com/kirana" target="_blank" class="d-flex align-items-center">
+              <i class="fab fa-facebook fa-lg text-primary mr-2"></i> Facebook
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="https://instagram.com/kirana" target="_blank" class="d-flex align-items-center">
+              <i class="fab fa-instagram fa-lg text-danger mr-2"></i> Instagram
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="https://twitter.com/kirana" target="_blank" class="d-flex align-items-center">
+              <i class="fab fa-twitter fa-lg text-info mr-2"></i> Twitter
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="https://youtube.com/kirana" target="_blank" class="d-flex align-items-center">
+              <i class="fab fa-youtube fa-lg text-danger mr-2"></i> YouTube
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 

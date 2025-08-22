@@ -1,16 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Date Format Helper - Simplified and Safe Version
- * 
- * Fungsi untuk konversi format tanggal antara display (dd.mm.yyyy) dan database (yyyy-mm-dd)
- */
-
 if (!function_exists('format_date_to_display')) {
-    /**
-     * Konversi tanggal dari format database (yyyy-mm-dd) ke format display (dd.mm.yyyy)
-     */
+
+    // Konversi tanggal dari format database (yyyy-mm-dd) ke format display (dd.mm.yyyy)
     function format_date_to_display($date_db) {
         if (empty($date_db) || $date_db === '0000-00-00' || $date_db === '0000-00-00 00:00:00') {
             return null;
@@ -25,9 +18,7 @@ if (!function_exists('format_date_to_display')) {
 }
 
 if (!function_exists('format_date_to_database')) {
-    /**
-     * Konversi tanggal dari format display (dd.mm.yyyy) ke format database (yyyy-mm-dd)
-     */
+    // Konversi tanggal dari format display (dd.mm.yyyy) ke format database (yyyy-mm-dd)
     function format_date_to_database($date_display) {
         if (empty($date_display)) {
             return null;
@@ -52,9 +43,7 @@ if (!function_exists('format_date_to_database')) {
 }
 
 if (!function_exists('convert_form_dates_to_db')) {
-    /**
-     * Konversi semua field tanggal dalam data form dari display ke database format
-     */
+    // Konversi semua field tanggal dalam data form dari display ke database format
     function convert_form_dates_to_db($data, $date_fields = ['tanggal_lahir', 'tanggalmasuk', 'tanggalkeluar']) {
         if (!is_array($data)) {
             return $data;
@@ -77,9 +66,7 @@ if (!function_exists('convert_form_dates_to_db')) {
 }
 
 if (!function_exists('format_dates_in_object')) {
-    /**
-     * Konversi semua field tanggal dalam object dari database ke display format
-     */
+    // Konversi semua field tanggal dalam object dari database ke display format
     function format_dates_in_object($data, $date_fields = ['tanggal_lahir', 'tanggalmasuk', 'tanggalkeluar']) {
         if (!is_object($data) && !is_array($data)) {
             return $data;
@@ -98,9 +85,7 @@ if (!function_exists('format_dates_in_object')) {
 }
 
 if (!function_exists('validate_date_format')) {
-    /**
-     * Validasi format tanggal dd.mm.yyyy
-     */
+    // Validasi format tanggal dd.mm.yyyy
     function validate_date_format($date) {
         if (empty($date)) {
             return false;

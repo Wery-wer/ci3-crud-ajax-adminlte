@@ -235,7 +235,7 @@
       </div>
       <div class="modal-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h6 id="user-info-header">Riwayat Pekerjaan</h6>
+          <h3 bold id="user-info-header">Riwayat Pekerjaan</h3>
           <button type="button" class="btn btn-success btn-sm" id="add-new-job-history">
             <i class="fas fa-plus"></i> Tambah Riwayat Baru
           </button>
@@ -252,7 +252,7 @@
               <h6 id="job-form-title">Tambah Riwayat Pekerjaan</h6>
             </div>
             <div class="card-body">
-              <form id="jobHistoryForm">
+              <form id="jobHistoryForm"> <!-- id jobHistoryForm untuk menambah/edit riwayat pekerjaan dan data nya di simpan di js -->
                 <input type="hidden" id="job_id" name="job_id">
                 <input type="hidden" id="job_user_id" name="user_id">
                 

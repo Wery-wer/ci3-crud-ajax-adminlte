@@ -8,53 +8,40 @@ class Riwayat_pekerjaan extends CI_Controller {
         $this->load->helper('date_format');
     }
 
-    public function add_user() {
-        // Proses validasi field lain
-        $data_user = $this->input->post();
+    // public function get_user_by_id() {
+    //     $id = $this->input->post('id');
+    //     $this->load->model('User_registration_model');
+    //     $user = $this->User_registration_model->get_user_by_id($id);
         
-        // Konversi tanggal menggunakan helper
-        $data_user = convert_form_dates_to_db($data_user, ['tanggal_lahir']);
-        
-        // Insert user ke DB
-        // ... kode insert user ...
+    //     if ($user) {
+    //         // Format tanggal untuk display menggunakan helper
+    //         $user = format_dates_in_object($user);
+    //         echo json_encode(['status' => true, 'data' => $user]);
+    //     } else {
+    //         echo json_encode(['status' => false, 'message' => 'User not found']);
+    //     }
+    // }
+
+    public function test_getid()
+    {
+        $this->load->model('Riwayat_pekerjaan_model');
+        $user = $this->Riwayat_pekerjaan_model->get_by_id(31);
+
+        echo json_encode($user); // object akan otomatis jadi JSON
     }
 
-    public function update_user() {
-        // Proses validasi field lain
-        $data_user = $this->input->post();
-        
-        // Konversi tanggal menggunakan helper
-        $data_user = convert_form_dates_to_db($data_user, ['tanggal_lahir']);
-        
-        // Update user di DB
-        // ... kode update user ...
-    }
-
-    public function get_user_by_id() {
-        $id = $this->input->post('id');
-        $this->load->model('User_registration_model');
-        $user = $this->User_registration_model->get_user_by_id($id);
-        
-        if ($user) {
-            // Format tanggal untuk display menggunakan helper
-            $user = format_dates_in_object($user);
-            echo json_encode(['status' => true, 'data' => $user]);
-        } else {
-            echo json_encode(['status' => false, 'message' => 'User not found']);
-        }
-    }
 
     public function get_user_with_history($id){
-        $this->load->model('User_registration_model');
+        // $this->load->model('User_registration_model');
         $this->load->model('Riwayat_pekerjaan_model');
 
-        $user = $this->User_registration_model->get_user_by_id($id);
+        // $user = $this->User_registration_model->get_user_by_id($id);
         $riwayat = $this->Riwayat_pekerjaan_model->get_by_user($id);
 
-        // Format tanggal user untuk display (dd.mm.yyyy)
-        if ($user) {
-            $user = format_dates_in_object($user);
-        }
+        // // Format tanggal user untuk display (dd.mm.yyyy)
+        // if ($user) {
+        //     $user = format_dates_in_object($user);
+        // }
 
         // Format tanggal riwayat untuk display (dd.mm.yyyy)
         if ($riwayat) {
@@ -65,7 +52,7 @@ class Riwayat_pekerjaan extends CI_Controller {
 
         $this->output->set_content_type('application/json')
             ->set_output(json_encode([
-            'profil' => $user,
+            // 'profil' => $user,
             'riwayat' => $riwayat
         ]));
     }
@@ -78,12 +65,12 @@ class Riwayat_pekerjaan extends CI_Controller {
         try {
             $data = $this->input->post();
             
-            // Remove job_id from data if it exists (untuk add, tidak perlu job_id)
+            // Remove job_id from data if it exists (untuk add, tidak perlu job_id) karena biasa nya dari database butuh jobid untuk nambah job baru
             if (isset($data['job_id'])) {
                 unset($data['job_id']);
             }
             
-            // Validasi data required
+            // Cek data apakah kosong atau tidak jika kosong maka status nya tidak lengkap
             if (empty($data['user_id']) || empty($data['namaperusahaan']) || empty($data['titlepekerjaan'])) {
                 echo json_encode(['status' => false, 'message' => 'Data tidak lengkap - user_id, namaperusahaan, dan titlepekerjaan harus diisi']);
                 return;

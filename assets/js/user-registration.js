@@ -321,8 +321,8 @@ function initEventHandlers() {
 		var userId = $(this).data("id");
 		var userName = $(this).closest("tr").find("td:nth-child(2)").text();
 
-		$("#detailModalLabel").text("Riwayat Pekerjaan - " + userName);
-		$("#user-info-header").text("Riwayat Pekerjaan - " + userName);
+		$("#detailModalLabel").text("Riwayat Pekerjaan");
+		$("#user-info-header").text(userName);
 
 		$("#modalDetailRiwayat").data("user-id", userId);
 		window.currentUserId = userId;
@@ -527,18 +527,18 @@ function initJobHistoryCRUD() {
 			? BASE_URL + "riwayat_pekerjaan/update_job_history"
 			: BASE_URL + "riwayat_pekerjaan/add_job_history";
 
-		// Get form data and filter it
+		// Ambil data form dan filter
 		let formData = $(this).serializeArray();
 
-		// For add operation, remove job_id from form data
+		// Untuk operasi tambah, hapus job_id dari data form
 		if (!isEdit) {
 			formData = formData.filter((item) => item.name !== "job_id");
 		}
 
-		// Convert back to string format
+		// Konversi kembali ke format string
 		const filteredFormData = $.param(formData);
 
-		// Debug: Log form data
+		// Debug: Tampilkan data form di console
 		console.log("Form submission:", {
 			isEdit: isEdit,
 			url: url,
@@ -547,7 +547,7 @@ function initJobHistoryCRUD() {
 			currentUserId: currentUserId,
 		});
 
-		// Additional validation
+		// Validasi tambahan
 		const namaperusahaan = $("#job_namaperusahaan").val();
 		const titlepekerjaan = $("#job_titlepekerjaan").val();
 		const tanggalmasuk = $("#job_tanggalmasuk").val();
@@ -761,6 +761,7 @@ function loadDepartments() {
 	});
 }
 
+// Function menampilkan riwayat pekerjaan
 function displayJobHistory(jobHistory) {
 	let jobHistoryHtml = "";
 

@@ -65,14 +65,14 @@ class User_registration extends CI_Controller {
         echo json_encode(['data' => $users]);
     }
 
-    public function test_user()
-    {
-        $users = $this->User_registration_model->get_all_users_for_registration();
-        echo '<pre>';
-        print_r($users);
-        echo '</pre>';
-        echo json_encode(['data' => $users]);
-    }
+    // public function test_user()
+    // {
+    //     $users = $this->User_registration_model->get_all_users_for_registration();
+    //     echo '<pre>';
+    //     print_r($users);
+    //     echo '</pre>';
+    //     echo json_encode(['data' => $users]);
+    // }
 
     public function add_user() {
         $this->form_validation->set_rules('name', 'Full Name', 'required');
@@ -135,20 +135,20 @@ class User_registration extends CI_Controller {
         }
     }
 
-    public function test_getid()
-    {
-        $user = $this->User_registration_model->get_user_by_id(46);
-        echo '<pre>';
-        print_r($user);
-        echo '</pre>';
-        echo json_encode($user);
-        // $query = $this->db->get('users');
-        // echo '</pre>';
-        // print_r($query->row_array());
-        // print_r($query->row());
-        // print_r($query->result_array());
-        // print_r($query->result());
-    }
+    // public function test_getid()
+    // {
+    //     $user = $this->User_registration_model->get_user_by_id(46);
+    //     echo '<pre>';
+    //     print_r($user);
+    //     echo '</pre>';
+    //     echo json_encode($user);
+    //     // $query = $this->db->get('users');
+    //     // echo '</pre>';
+    //     // print_r($query->row_array());
+    //     // print_r($query->row());
+    //     // print_r($query->result_array());
+    //     // print_r($query->result());
+    // }
 
     public function update_user() {
         $this->form_validation->set_rules('name', 'Full Name', 'required');

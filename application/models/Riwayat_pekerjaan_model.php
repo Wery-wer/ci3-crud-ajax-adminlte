@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Riwayat_pekerjaan_model extends CI_Model {
 
-    protected $table = 'riwayat_pekerjaan';
+    // protected $table = 'riwayat_pekerjaan';
 
     public function __construct() {
         parent::__construct();
