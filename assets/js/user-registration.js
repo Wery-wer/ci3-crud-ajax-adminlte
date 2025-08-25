@@ -319,17 +319,17 @@ function initEventHandlers() {
 	// Detail button
 	$(document).on("click", ".detail-btn", function () {
 		var userId = $(this).data("id");
-		var userName = $(this).closest("tr").find("td:nth-child(2)").text();
+		// var userName = $(this).closest("tr").find("td:nth-child(2)").text();
 
-		$("#detailModalLabel").text("Riwayat Pekerjaan");
-		$("#user-info-header").text(userName);
+		// $("#detailModalLabel").text("Riwayat Pekerjaan");
+		// $("#user-info-header").text(userName);
 
-		$("#modalDetailRiwayat").data("user-id", userId);
-		window.currentUserId = userId;
-		currentUserId = userId;
+		// $("#modalDetailRiwayat").data("user-id", userId);
+		// window.currentUserId = userId;
+		// currentUserId = userId;
 
 		// Also set the hidden field immediately
-		$("#job_user_id").val(userId);
+		// $("#job_user_id").val(userId);
 
 		console.log("Detail button clicked - User ID set to:", userId);
 
@@ -494,7 +494,7 @@ function initJobHistoryCRUD() {
 		}, 100);
 	});
 
-	// Show edit job form
+	// Show edit form di modal Riwayat pekerjaan ketika klik button Detail
 	$(document).on("click", ".edit-job-btn", function () {
 		console.log("Edit job clicked");
 		const job = JSON.parse($(this).attr("data-job"));
@@ -767,42 +767,31 @@ function displayJobHistory(jobHistory) {
 
 	if (jobHistory && jobHistory.length > 0) {
 		jobHistory.forEach(function (job) {
+			const periode = job.tanggalmasuk + " sampai " + (job.tanggalkeluar && job.tanggalkeluar.trim() !== "" ? job.tanggalkeluar : "Sekarang")
 			jobHistoryHtml += `
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h6 class="card-title">${
-																	job.namaperusahaan
-																}</h6>
-                                <p class="card-text">
-                                    <strong>Posisi:</strong> ${
-																			job.titlepekerjaan
-																		}<br>
-                                    <strong>Periode:</strong> ${
-																			job.tanggalmasuk
-																		} - ${job.tanggalkeluar || "Sekarang"}<br>
-                                    <strong>Pendidikan:</strong> ${
-																			job.universitas || "-"
-																		}
-                                </p>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <button type="button" class="btn btn-warning btn-sm edit-job-btn" data-job='${JSON.stringify(
-																	job
-																)}'>
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm delete-job-btn" data-id="${
-																	job.id
-																}" data-company="${job.namaperusahaan}">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+				<div class="card mb-3">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="card-title">${job.namaperusahaan}</h6>
+								<p class="card-text">
+									<strong>Posisi:</strong> ${job.titlepekerjaan}<br>
+									<strong>Periode:</strong> ${periode}<br>
+									<strong>Pendidikan:</strong> ${job.universitas || "-"}
+								</p>
+							</div>
+							<div class="col-md-4 text-right">
+								<button type="button" class="btn btn-warning btn-sm edit-job-btn" data-job='${JSON.stringify(job)}'>
+									<i class="fas fa-edit"></i> Edit
+								</button>
+								<button type="button" class="btn btn-danger btn-sm delete-job-btn" data-id="${job.id}" data-company="${job.namaperusahaan}">
+									<i class="fas fa-trash"></i> Hapus
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			`;
 		});
 	} else {
 		jobHistoryHtml =

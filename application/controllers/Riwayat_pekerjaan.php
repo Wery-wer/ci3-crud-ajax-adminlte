@@ -22,28 +22,18 @@ class Riwayat_pekerjaan extends CI_Controller {
     //     }
     // }
 
-    public function test_getid()
-    {
-        $this->load->model('Riwayat_pekerjaan_model');
-        $user = $this->Riwayat_pekerjaan_model->get_by_id(31);
+    // public function test_getid()
+    // {
+    //     $this->load->model('Riwayat_pekerjaan_model');
+    //     $user = $this->Riwayat_pekerjaan_model->get_by_id(3);
 
-        echo json_encode($user); // object akan otomatis jadi JSON
-    }
+    //     echo json_encode($user); // object akan otomatis jadi JSON
+    // }
 
 
     public function get_user_with_history($id){
-        // $this->load->model('User_registration_model');
         $this->load->model('Riwayat_pekerjaan_model');
-
-        // $user = $this->User_registration_model->get_user_by_id($id);
         $riwayat = $this->Riwayat_pekerjaan_model->get_by_user($id);
-
-        // // Format tanggal user untuk display (dd.mm.yyyy)
-        // if ($user) {
-        //     $user = format_dates_in_object($user);
-        // }
-
-        // Format tanggal riwayat untuk display (dd.mm.yyyy)
         if ($riwayat) {
             foreach ($riwayat as &$job) {
                 $job = format_dates_in_object($job);
@@ -52,9 +42,18 @@ class Riwayat_pekerjaan extends CI_Controller {
 
         $this->output->set_content_type('application/json')
             ->set_output(json_encode([
-            // 'profil' => $user,
             'riwayat' => $riwayat
         ]));
+    }
+
+    public function test_gethistory()
+    {
+        $this->load->model('Riwayat_pekerjaan_model');
+        $user = $this->Riwayat_pekerjaan_model->get_by_user(46);
+
+        print_r($user); 
+        echo '<pre>';
+        echo json_encode(['data' => $user]);
     }
 
     public function add_job_history() {
